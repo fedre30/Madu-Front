@@ -23,10 +23,6 @@ Developing a Back-office whose feature are:
 
 * Quentin Aimé (Frontend Developer)
 * Federica Alfano (Frontend Developer)
-* Aymeline Chemin (UX/UI Designer)
-* Mélanie Da Costa (UX/UI Designer)
-* Rainald Durand (Backend Developer)
-* Mathieu Gelbon (Backend Developer)
 * Joel Pokam (Frontend Developer)
 
 
@@ -56,8 +52,18 @@ yarn lint
 ```
 
 
-### lib used
+### Libraries
 
-Vue
-leaflet
-node-open-geocoder
+* Vue
+* vuex
+* [element-ui](https://element.eleme.io/#/fr-FR) 
+* vue-awesome
+* vue-router
+* leaflet
+* node-open-geocoder
+
+### Link
+
+TBT
+
+

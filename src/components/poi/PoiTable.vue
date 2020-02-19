@@ -2,7 +2,9 @@
   <div class="container">
     <div class="button-container">
       <el-row justify="end" style="margin-bottom: 2rem">
-        <el-button class="btn" type="primary" @click="addShop()">Ajouter un commerçant</el-button>
+        <el-button class="btn" type="primary" @click="addShop()"
+          >Ajouter un commerçant</el-button
+        >
       </el-row>
     </div>
     <template>
@@ -24,19 +26,18 @@
               style="margin-right: 10px"
               v-for="(tag, index) in scope.row.tags"
               :key="index"
-            >#{{ tag }}</span>
+              >#{{ tag }}</span
+            >
           </template>
         </el-table-column>
         <el-table-column label="Greenscore" width="150">
           <template slot-scope="scope">
-            <span v-if="scope.row.greenscore !== null">
-              {{
-              scope.row.greenscore
-              }}
-            </span>
+            <span v-if="scope.row.greenscore !== null">{{
+              scope.row.greenscore ? getGreenscore(scope.row.greenscore) : null
+            }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="Localisation">
+        <el-table-column label="Localisation" width="300">
           <template slot-scope="scope">
             <span>
               {{ scope.row.adress }}, {{ scope.row.zipcode }},
@@ -67,11 +68,20 @@
               type="success"
               @click="handleGreenscore(scope.row)"
               v-if="!scope.row.greenscore"
-            >Ajouter un greenscore</el-button>
-            <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">
+              >Ajouter un greenscore</el-button
+            >
+            <el-button
+              size="mini"
+              type="primary"
+              @click="handleEdit(scope.$index, scope.row)"
+            >
               <i class="el-icon-edit"></i>
             </el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.row)">
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleDelete(scope.row)"
+            >
               <i class="el-icon-delete"></i>
             </el-button>
           </template>
@@ -85,12 +95,8 @@
         :visible="showEditModal"
       />
       <poi-modal ref="addPoiModal" :visible="showAddModal" />
-      <archive-modal
-        :modelName="selectedShop ? selectedShop.name : 'ce lieu'"
-        ref="archivePoiModal"
-        @successCallback="archiveShop"
-      />
-      <poi-greenscore-modal ref="addGreenscoreModal" />
+      <poi-greenscore-modal ref="addGreenscoreModal" :shop="greenscoreShop" />
+      <poi-delete-modal :shop="selectedShop" ref="deletePoiModal" />
     </template>
   </div>
 </template>
@@ -111,14 +117,14 @@
 </style>
 
 <script>
-import poiGreenscoreModal from "../molecules/poiGreenscoreModal";
-import poiModal from "../organisms/poiModal";
-import archiveModal from "../organisms/archiveModal";
+import poiGreenscoreModal from "../poi/poiGreenscoreModal";
+import poiModal from "../poi/poiModal";
+import poiDeleteModal from "../poi/poiDeleteModal";
 import axios from "axios";
 export default {
   components: {
     poiModal,
-    archiveModal,
+    poiDeleteModal,
     poiGreenscoreModal
   },
   data() {
@@ -152,9 +158,14 @@ export default {
       selectedShop: null,
       showAddModal: false,
       showEditModal: false,
-      showGreenscoreModal: false
+      showGreenscoreModal: false,
+      greenscoreShop: null
     };
   },
+
+  computed: {},
+
+  updated() {},
   mounted() {
     axios
       .get(`${window.config.api_root_url}shops`)
@@ -169,24 +180,27 @@ export default {
     },
     handleDelete(shop) {
       this.selectedShop = shop;
-      this.$refs.archivePoiModal.open();
+      this.$refs.deletePoiModal.open();
     },
     addShop() {
       this.showAddModal = true;
       // eslint-disable-next-line no-console
       this.$refs.addPoiModal.open();
     },
-    handleGreenscore() {
+    handleGreenscore(shop) {
+      this.greenscoreShop = shop;
       this.showGreenscoreModal = true;
       // eslint-disable-next-line no-console
       this.$refs.addGreenscoreModal.open();
     },
-    archiveShop() {
-      // eslint-disable-next-line no-console
-      console.log("ok");
-      axios.delete(
-        `${window.config.api_root_url}shops/delete/${this.selectedShop._id}`
-      );
+
+    getGreenscore(greenscoreID) {
+      if (greenscoreID) {
+        axios
+          .get(`${window.config.api_root_url}greenscore/${greenscoreID}`)
+          // eslint-disable-next-line no-console
+          .then(resp => console.log(resp.data));
+      }
     }
   }
 };

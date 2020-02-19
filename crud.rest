@@ -146,8 +146,13 @@ Authorization: {{token}}
 GET http://{{host}}:{{port}}/greenscore/
 Authorization: {{token}}
 
+### GET GREENSCORE BY ID
+
+GET http://{{host}}:{{port}}/greenscore/{{{{greenscoreid}}}}
+Authorization: {{token}}
+
 ### GREENSCORE ADD
-POST http://{{host}}:{{port}}/greenscore/add
+POST http://{{host}}:{{port}}/greenscore/add/{{shopsid}}
 Authorization: {{token}}
 Content-Type: application/json
 

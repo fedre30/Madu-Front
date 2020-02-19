@@ -44,7 +44,8 @@
               :key="size"
               type="text"
               @click="setClientSize(size)"
-            >{{ size }}</el-button>
+              >{{ size }}</el-button
+            >
           </div>
         </div>
         <div class="user-number">
@@ -61,12 +62,10 @@
 </template>
 
 <script>
-
 import { mapActions } from "vuex";
 
 export default {
-  components: {
-  },
+  components: {},
 
   props: {
     client: {
@@ -115,10 +114,7 @@ export default {
   },
 
   methods: {
-    ...mapActions([
-      'postData',
-      'patchData',
-    ]),
+    ...mapActions(["postData", "patchData"]),
     setClientSize(size) {
       this.editedClient.size = size;
     },
@@ -132,15 +128,15 @@ export default {
     validate() {
       if (this.client._id) {
         this.patchData({
-          modelName: 'structures',
+          modelName: "structures",
           objectId: this.client._id,
           data: this.editedClient
-        })
+        });
       } else {
         this.postData({
-          modelName: 'structures',
+          modelName: "structures",
           data: this.editedClient
-        })
+        });
       }
       this.close();
     }

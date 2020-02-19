@@ -6,19 +6,11 @@
 </template>
 
 <script>
-import PoiTable from "../components/organisms/PoiTable";
+import PoiTable from "../components/poi/PoiTable";
 export default {
   components: {
     PoiTable
-  },
-
-  data() {
-    return {
-      activeName: "first"
-    };
-  },
-
-  mounted: function() {}
+  }
 };
 </script>
 

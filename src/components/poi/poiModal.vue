@@ -42,7 +42,10 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="Type" class="label-style">
-            <el-select v-model="formData.type" placeholder="Selectionner un type">
+            <el-select
+              v-model="formData.type"
+              placeholder="Selectionner un type"
+            >
               <el-option label="Resturant" value="restaurant"></el-option>
               <el-option label="Boutique" value="shop"></el-option>
               <el-option label="Activité" value="activity"></el-option>
@@ -51,8 +54,12 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="Accès au fauteuil roulant" class="label-style">
-            <el-radio v-model="formData.accessibility" label="true" border>Oui</el-radio>
-            <el-radio v-model="formData.accessibility" label="false" border>Non</el-radio>
+            <el-radio v-model="formData.accessibility" label="true" border
+              >Oui</el-radio
+            >
+            <el-radio v-model="formData.accessibility" label="false" border
+              >Non</el-radio
+            >
           </el-form-item>
         </el-col>
       </el-row>
@@ -83,7 +90,9 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-button type="primary" @click="isEdit ? edit() : addShop()">Enregistrer</el-button>
+        <el-button type="primary" @click="isEdit ? edit() : addShop()"
+          >Enregistrer</el-button
+        >
         <el-button @click="showModal = false">Annuler</el-button>
       </el-row>
     </el-form>
@@ -129,17 +138,19 @@ export default {
   computed: {},
 
   mounted: function() {
-    this.isEdit ? (this.formData = this.shop) : this.formData;
+    const parsedTags = this.shop.tags ? this.shop.tags.join(", ") : "";
     // eslint-disable-next-line no-console
-
-    // axios.get("http://35.180.73.134/:3000/greenscore").then(response =>
-    //   // eslint-disable-next-line no-console
-    //   console.log(response.data)((this.greenscoreData = response.data))
-    // );
+    console.log(this.shop.tags);
+    this.isEdit ? (this.formData = this.shop) : this.formData;
+    this.isEdit ? (this.formData.tags = parsedTags) : this.formData;
   },
 
   updated: function() {
+    const parsedTags = this.shop.tags ? this.shop.tags.join(", ") : "";
+    // eslint-disable-next-line no-console
+    console.log(this.shop.tags);
     this.isEdit ? (this.formData = this.shop) : this.formData;
+    this.isEdit ? (this.formData.tags = parsedTags) : this.formData;
   },
 
   methods: {
@@ -151,11 +162,14 @@ export default {
       this.$emit("successCallback");
     },
     edit() {
+      this.formData.tags = this.formData.tags.split(", ");
+
       axios.patch(
         `${window.config.api_root_url}shops/update/${this.shop._id}`,
         this.formData
       );
       this.showModal = false;
+      this.$router.go();
     },
 
     onClickIcon() {
@@ -167,9 +181,11 @@ export default {
       }
     },
     addShop() {
+      this.formData.tags = this.formData.tags.split(", ");
       axios.post(`${window.config.api_root_url}shops/add`, this.formData);
 
       this.showModal = false;
+      this.$router.go();
     },
     closeModal() {
       this.showModal = false;

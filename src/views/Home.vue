@@ -1,6 +1,11 @@
 <template>
   <div class="home">
-    <Map v-loading="loading" :coordinates="coordinates" :key="keygen" :mapData="mapData"/>
+    <Map
+      v-loading="loading"
+      :coordinates="coordinates"
+      :key="keygen"
+      :mapData="mapData"
+    />
   </div>
 </template>
 
@@ -164,7 +169,8 @@ export default {
           // address: "6 rue Rennequin",
           zip_code: "75017",
           hours: "mardi au samedi 12-19h",
-          keywords: "Patisserie, salon de thé, coffee shop, formée par Thierry Marx ?",
+          keywords:
+            "Patisserie, salon de thé, coffee shop, formée par Thierry Marx ?",
           category: "Resto",
           type: "Pâtisserie",
           price: "5€ patisserie",

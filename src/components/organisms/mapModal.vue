@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <Map v-loading="loading" :coordinates="coordinates" :mapData="mapData"/>
+    <Map v-loading="loading" :coordinates="coordinates" :mapData="mapData" />
   </div>
 </template>
 
@@ -20,13 +20,13 @@ export default {
       coordinates: {
         latitude: 48.864716,
         longitude: 2.349014
-      },
+      }
     };
   },
 
   computed: {
     mapData() {
-      return []
+      return [];
     }
   },
 

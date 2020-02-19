@@ -6,6 +6,7 @@
       :name="entry.name"
       :linkName="entry.link"
       :icon="entry.icon"
+      :tooltip="entry.tooltip"
     ></sidebar-entry>
     <div class="version">{{ version }}</div>
   </div>
@@ -25,21 +26,25 @@ export default {
       sidebarEntries: [
         {
           link: "home",
-          icon: "el-icon-house"
+          icon: "el-icon-house",
+          tooltip: "Home"
         },
         {
           link: "company-list",
-          icon: "el-icon-shopping-bag-2"
-        },
-        {
-          name: "greenscore",
-          link: "greenscore",
-          icon: "el-icon-shopping-bag-1"
+          icon: "el-icon-office-building",
+          tooltip: "Entreprises"
         },
         {
           name: "shops",
           link: "shops",
-          icon: "el-icon-shopping-bag-1"
+          icon: "el-icon-shopping-bag-1",
+          tooltip: "POI"
+        },
+        {
+          name: "greenscore",
+          link: "greenscore",
+          icon: "el-icon-apple",
+          tooltip: "Critères Greenscore"
         }
       ]
     };

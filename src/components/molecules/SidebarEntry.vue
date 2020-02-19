@@ -1,6 +1,13 @@
 <template>
   <div class="entry" @click="redirect">
-    <i :class="icon"></i>
+    <el-tooltip
+      class="item"
+      effect="dark"
+      :content="tooltip"
+      placement="right-start"
+    >
+      <i :class="icon" style="font-size: 2rem"></i>
+    </el-tooltip>
   </div>
 </template>
 
@@ -14,6 +21,10 @@ export default {
     icon: {
       type: String,
       required: true
+    },
+    tooltip: {
+      type: String,
+      default: "Home"
     }
   },
   methods: {

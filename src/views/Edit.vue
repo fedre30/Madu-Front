@@ -38,7 +38,6 @@
 
 <script>
 export default {
-  
   components: {},
 
   props: {},
@@ -57,9 +56,7 @@ export default {
 
   computed: {},
 
-  mounted: function() {
-     
-  },
+  mounted: function() {},
 
   methods: {
     nSubmit() {
@@ -70,7 +67,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 .content {
   width: 500px;
   height: 300px;
