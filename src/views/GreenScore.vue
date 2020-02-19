@@ -66,10 +66,6 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-import GreenScoreModal from "../components/molecules/greenscoreModal";
-=======
->>>>>>> d9c55932b829ba709c039b4e3dbdccd7429a496a
 import axios from "axios";
 export default {
   components: {},
