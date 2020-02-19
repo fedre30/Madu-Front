@@ -8,10 +8,16 @@
             <el-input v-model="mail_pro" placeholder="Identifiant"></el-input>
           </el-form-item>
           <el-form-item label="Mot de passe">
-            <el-input type="password" v-model="password" placeholder="Mot de passe"></el-input>
+            <el-input
+              type="password"
+              v-model="password"
+              placeholder="Mot de passe"
+            ></el-input>
           </el-form-item>
           <el-form-item>
-            <button type="submit" @click="login" class="btn-submit">Se connecter</button>
+            <button type="submit" @click="login" class="btn-submit">
+              Se connecter
+            </button>
           </el-form-item>
         </el-form>
       </div>
@@ -35,16 +41,15 @@ export default {
 
   computed: {},
 
-  mounted: function() {
-  },
+  mounted: function() {},
 
   methods: {
     login(event) {
       event.preventDefault();
-      console.debug('la');// eslint-disable-line
+      console.debug("la"); // eslint-disable-line
       this.$store
         .dispatch("login", { mail_pro: this.mail_pro, password: this.password })
-        .then(() => this.$router.push({"name": "home"}))
+        .then(() => this.$router.push({ name: "home" }))
         .catch(err => console.log(err)); // eslint-disable-line
     }
   }
@@ -55,7 +60,7 @@ export default {
 .view-container {
   height: 100vh;
   width: 100vw;
-  background-color: #FAFBFC;
+  background-color: #fafbfc;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -75,7 +80,8 @@ export default {
       text-align: left;
       margin: auto;
       width: 305px;
-      .email,.password {
+      .email,
+      .password {
         margin: 0 auto;
         .label {
           text-transform: uppercase;
@@ -86,12 +92,12 @@ export default {
       h1 {
         text-transform: uppercase;
         font-family: "Lato Bold";
-        color: #000D33;
+        color: #000d33;
       }
       input {
         background: transparent;
         width: 100%;
-        border: 1px solid #C0C5D2;
+        border: 1px solid #c0c5d2;
         padding: 13px 15px;
         font-size: 17px;
         border-radius: 4px;
@@ -101,7 +107,7 @@ export default {
         font-family: "Roboto", sans-serif;
         text-transform: uppercase;
         outline: 0;
-        background: #0077FF;
+        background: #0077ff;
         width: 200px;
         border: 0;
         margin-top: 60px;
@@ -114,7 +120,7 @@ export default {
       }
       button:hover,
       button:focus {
-        background: #076EE4;
+        background: #076ee4;
       }
       p {
         margin: 15px 0 0;

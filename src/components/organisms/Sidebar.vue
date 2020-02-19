@@ -45,14 +45,14 @@ export default {
     };
   },
   computed: {
-    version() {
-      try {
-        return VERSION;
-      } catch (e) {
-        console.error(e); // eslint-disable-line
-        return "";
-      }
-    }
+    //   version() {
+    //     try {
+    //       return VERSION;
+    //     } catch (e) {
+    //       console.error(e); // eslint-disable-line
+    //       return "";
+    //     }
+    //   }
   }
 };
 </script>
