@@ -48,14 +48,9 @@
 <script>
 import axios from "axios";
 export default {
-  components: {},
-
-  props: {},
-
   data: function() {
     return {
-      activeNameType: "first",
-      arctiveNameCriteria: "first",
+      activeNameType: "restaurant",
       resturantData: ""
     };
   },
@@ -65,9 +60,7 @@ export default {
       .get(`${window.config.api_root_url}greenscore/shops/restaurant`)
       .then(response =>
         // eslint-disable-next-line no-console
-        console.log(Object.values(response.data))(
-          (this.resturantData = response.data)
-        )
+        console.log(response.data)((this.resturantData = response.data))
       );
   }
 };

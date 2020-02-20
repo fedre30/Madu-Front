@@ -20,8 +20,6 @@ export default {
     };
   },
 
-  computed: {},
-
   mounted: function() {
     this.details = places.find(place => place.id == this.$route.params.uid);
   }

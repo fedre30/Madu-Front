@@ -6,8 +6,6 @@
 
 <script>
 export default {
-  components: {},
-
   props: {
     selectedClient: {
       type: Object,

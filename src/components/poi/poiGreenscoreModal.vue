@@ -199,8 +199,6 @@
 import axios from "axios";
 
 export default {
-  components: {},
-
   props: {
     shop: {
       type: Object

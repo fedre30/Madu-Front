@@ -39,14 +39,10 @@ export default {
     };
   },
 
-  computed: {},
-
-  mounted: function() {},
-
   methods: {
     login(event) {
       event.preventDefault();
-      console.debug('la');// eslint-disable-line
+      console.debug("la"); // eslint-disable-line
       this.$store
         .dispatch("login", { mail_pro: this.mail_pro, password: this.password })
         .then(() => this.$router.push({ name: "home" }))

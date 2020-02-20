@@ -123,8 +123,6 @@ export default {
       selectedTip: null
     };
   },
-  computed: {},
-  mounted: function() {},
 
   methods: {
     handleEdit(tip) {

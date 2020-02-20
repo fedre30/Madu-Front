@@ -155,8 +155,6 @@ export default {
     };
   },
 
-  computed: {},
-
   mounted: function() {
     this.isEdit ? (this.formData = this.shop) : this.formData;
   },
