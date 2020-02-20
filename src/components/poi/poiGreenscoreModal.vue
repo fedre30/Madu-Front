@@ -1,26 +1,21 @@
 <template>
   <!-- GREENSCORE MODAL -->
-  <el-dialog
-    width="50%"
-    title="GREENSCORE"
-    :visible.sync="showModal"
-    append-to-body
-  >
+  <el-dialog width="40%" title="GREENSCORE" :visible.sync="showModal" append-to-body>
     <h2 style="margin: 3rem 0 1.5rem 0">
-      Food <i class="el-icon-fork-spoon" style="margin-left: 0.5rem"></i>
+      Food
+      <i class="el-icon-fork-spoon" style="margin-left: 0.5rem"></i>
     </h2>
     <el-form v-model="formData['food']">
-      <el-row
-        :gutter="40"
-        v-for="(foodCriteria, index) in formData.food"
-        :key="index"
-      >
-        <el-col :span="12">
+      <el-row :gutter="40" v-for="(foodCriteria, index) in formData.food" :key="index">
+        <el-col :span="8">
           <el-form-item label="Nom du critère" class="label-style">
-            <el-input v-model="formData.food[index].criteria"></el-input>
+            <el-autocomplete
+              v-model="formData.food[index].criteria"
+              :fetch-suggestions="foodQuerySearch"
+            />
           </el-form-item>
         </el-col>
-        <el-col :span="5">
+        <el-col :span="6">
           <el-form-item label="Note" class="label-style">
             <el-input-number
               v-model="formData.food[index].note"
@@ -30,7 +25,7 @@
             ></el-input-number>
           </el-form-item>
         </el-col>
-        <el-col :span="5">
+        <el-col :span="6">
           <el-form-item label="Pondération" class="label-style">
             <el-input-number
               v-model="formData.food[index].coefficient"
@@ -40,23 +35,30 @@
             ></el-input-number>
           </el-form-item>
         </el-col>
+        <el-col :span="2">
+          <div style="margin: 2.5rem 0">
+            <el-button size="mini" type="danger" @click="removeCriteria('food', index)">
+              <i class="el-icon-delete"></i>
+            </el-button>
+          </div>
+        </el-col>
       </el-row>
       <el-row>
         <el-button @click="addCriteria('food')">Ajouter critère</el-button>
       </el-row>
     </el-form>
     <h2 style="margin: 3rem 0 1.5rem 0">
-      Social <i class="el-icon-user" style="margin-left: 0.5rem"></i>
+      Social
+      <i class="el-icon-user" style="margin-left: 0.5rem"></i>
     </h2>
     <el-form v-model="formData['social']">
-      <el-row
-        :gutter="20"
-        v-for="(socialCriteria, index) in formData.social"
-        :key="index"
-      >
-        <el-col :span="12">
+      <el-row :gutter="20" v-for="(socialCriteria, index) in formData.social" :key="index">
+        <el-col :span="8">
           <el-form-item label="Nom du critère" class="label-style">
-            <el-input v-model="formData.social[index].criteria"></el-input>
+            <el-autocomplete
+              v-model="formData.social[index].criteria"
+              :fetch-suggestions="socialQuerySearch"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -79,23 +81,30 @@
             ></el-input-number>
           </el-form-item>
         </el-col>
+        <el-col :span="2">
+          <div>
+            <el-button size="mini" type="danger" @click="removeCriteria('social', index)">
+              <i class="el-icon-delete"></i>
+            </el-button>
+          </div>
+        </el-col>
       </el-row>
       <el-row>
         <el-button @click="addCriteria('social')">Ajouter critère</el-button>
       </el-row>
     </el-form>
     <h2 style="margin: 3rem 0 1.5rem 0">
-      Matériel <i class="el-icon-box" style="margin-left: 0.5rem"></i>
+      Matériel
+      <i class="el-icon-box" style="margin-left: 0.5rem"></i>
     </h2>
     <el-form v-model="formData['material']">
-      <el-row
-        :gutter="20"
-        v-for="(materialCriteria, index) in formData.material"
-        :key="index"
-      >
-        <el-col :span="12">
+      <el-row :gutter="20" v-for="(materialCriteria, index) in formData.material" :key="index">
+        <el-col :span="8">
           <el-form-item label="Nom du critère" class="label-style">
-            <el-input v-model="formData.material[index].criteria"></el-input>
+            <el-autocomplete
+              v-model="formData.material[index].criteria"
+              :fetch-suggestions="materialQuerySearch"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -118,15 +127,20 @@
             ></el-input-number>
           </el-form-item>
         </el-col>
+        <el-col :span="2">
+          <div style="margin: 2.5rem 0">
+            <el-button size="mini" type="danger" @click="removeCriteria('material', index)">
+              <i class="el-icon-delete"></i>
+            </el-button>
+          </div>
+        </el-col>
       </el-row>
       <el-row>
         <el-button @click="addCriteria('material')">Ajouter critère</el-button>
       </el-row>
     </el-form>
     <el-row style="margin: 2rem 0">
-      <el-button type="primary" @click="submitGreenscore()"
-        >Enregistrer</el-button
-      >
+      <el-button type="primary" @click="isEdit ? editGreenscore() : submitGreenscore()">Enregistrer</el-button>
       <el-button @click="showModal = false">Annuler</el-button>
     </el-row>
   </el-dialog>
@@ -134,6 +148,7 @@
 
 <script>
 import axios from "axios";
+
 export default {
   components: {},
 
@@ -157,22 +172,40 @@ export default {
         social: [],
         material: []
       },
-
-      showModal: this.visible
+      showModal: false,
+      foodSuggestions: [],
+      socialSuggestions: [],
+      materialSuggestions: []
     };
   },
 
   computed: {},
 
-  mounted: function() {},
+  mounted: function() {
+    axios
+      .get(`${window.config.api_root_url}greenscore/shops/restaurant`)
+      .then(resp => (this.foodSuggestions = resp.data[0].food));
+    axios
+      .get(`${window.config.api_root_url}greenscore/shops/restaurant`)
+      .then(resp => (this.socialSuggestions = resp.data[0].social));
 
-  updated: function() {
-    this.isEdit ? (this.formData = this.shop) : this.formData;
+    axios
+      .get(`${window.config.api_root_url}greenscore/shops/restaurant`)
+      .then(resp => (this.materialSuggestions = resp.data[0].material));
+
+    this.isEdit
+      ? axios
+          .get(
+            `${window.config.api_root_url}greenscore/${this.shop.greenscore}`
+          )
+          .then(resp => {
+            this.formData = resp.data[0];
+          })
+      : this.formData;
   },
 
   methods: {
     open() {
-      // eslint-disable-next-line no-console
       this.showModal = true;
     },
 
@@ -182,7 +215,7 @@ export default {
         this.formData
       );
       this.showModal = false;
-      this.$router.go();
+      //this.$router.go();
     },
 
     closeModal() {
@@ -191,45 +224,65 @@ export default {
 
     addCriteria(category) {
       this.formData[category].push({ criteria: "", note: "", coefficient: "" });
+    },
+
+    removeCriteria(category, id) {
+      this.formData[category].splice(id, 1);
+    },
+
+    editGreenscore() {
+      axios.patch(
+        `${window.config.api_root_url}greenscore/update/${this.shop.greenscore}`,
+        this.formData
+      );
+      this.showModal = false;
+    },
+    foodQuerySearch(queryString, cb) {
+      const array = this.foodSuggestions.map(
+        food => (food["value"] = food["criteria"])
+      );
+      const parsedArray = array.map(t => {
+        return { value: t };
+      });
+      var results = queryString
+        ? parsedArray.filter(this.createFilter(queryString))
+        : parsedArray;
+
+      cb(results);
+    },
+    socialQuerySearch(queryString, cb) {
+      const array = this.socialSuggestions.map(
+        social => (social["value"] = social["criteria"])
+      );
+      const parsedArray = array.map(t => {
+        return { value: t };
+      });
+      var results = queryString
+        ? parsedArray.filter(this.createFilter(queryString))
+        : parsedArray;
+
+      cb(results);
+    },
+    materialQuerySearch(queryString, cb) {
+      const array = this.materialSuggestions.map(
+        material => (material["value"] = material["criteria"])
+      );
+      const parsedArray = array.map(t => {
+        return { value: t };
+      });
+      var results = queryString
+        ? parsedArray.filter(this.createFilter(queryString))
+        : parsedArray;
+
+      cb(results);
+    },
+    createFilter(queryString) {
+      return sugg => {
+        return (
+          sugg.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+        );
+      };
     }
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.label-style {
-  font-weight: bold;
-  label {
-    text-transform: uppercase;
-  }
-}
-
-.greenscore-icon {
-  width: 100%;
-  display: flex;
-}
-.greenscore-picto {
-  width: 2rem;
-
-  i {
-    font-size: 2rem;
-  }
-}
-
-.greenscore-icon-label {
-  margin-left: 0.5rem;
-  margin-bottom: 0;
-}
-
-.greenscore-value {
-  display: flex;
-  flex-direction: column;
-}
-.activePrice {
-  color: rgba(192, 197, 210, 1);
-}
-
-.inactivePrice {
-  color: rgba(192, 197, 210, 0.3);
-}
-</style>

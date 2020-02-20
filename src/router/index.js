@@ -7,6 +7,7 @@ import Companies from "../views/Companies.vue";
 import Company from "../views/Company.vue";
 import Edit from "../views/Edit.vue";
 import GreenScore from "../views/GreenScore.vue";
+import Tips from "../views/Tips.vue";
 
 Vue.use(VueRouter);
 
@@ -26,6 +27,11 @@ const routes = [
     path: "/greenscore",
     name: "greenscore",
     component: GreenScore
+  },
+  {
+    path: "/tips",
+    name: "tips",
+    component: Tips
   },
   {
     path: "/shops",

@@ -2,19 +2,17 @@
   <div class="container">
     <div class="button-container">
       <el-row justify="end" style="margin-bottom: 2rem">
-        <el-button class="btn" type="primary" @click="addShop()"
-          >Ajouter un commerçant</el-button
-        >
+        <el-button class="btn" type="primary" @click="addShop()">Ajouter un commerçant</el-button>
       </el-row>
     </div>
     <template>
       <el-table :data="dataTable" style="width: 100%">
-        <el-table-column label="Nom">
+        <el-table-column label="Nom" sortable>
           <template slot-scope="scope">
             <b>{{ scope.row.name }}</b>
           </template>
         </el-table-column>
-        <el-table-column label="Type" width="180">
+        <el-table-column label="Type" width="180" sortable>
           <el-progress type="circle" :percentage="25"></el-progress>
           <template slot-scope="scope">
             <span style="margin-right: 10px">{{ scope.row.type }}</span>
@@ -26,15 +24,12 @@
               style="margin-right: 10px"
               v-for="(tag, index) in scope.row.tags"
               :key="index"
-              >#{{ tag }}</span
-            >
+            >#{{ tag }}</span>
           </template>
         </el-table-column>
         <el-table-column label="Greenscore" width="150">
           <template slot-scope="scope">
-            <span v-if="scope.row.greenscore !== null">{{
-              scope.row.greenscore ? getGreenscore(scope.row.greenscore) : null
-            }}</span>
+            <greenscore-value :greenscoreId="scope.row.greenscore" />
           </template>
         </el-table-column>
         <el-table-column label="Localisation" width="300">
@@ -68,20 +63,11 @@
               type="success"
               @click="handleGreenscore(scope.row)"
               v-if="!scope.row.greenscore"
-              >Ajouter un greenscore</el-button
-            >
-            <el-button
-              size="mini"
-              type="primary"
-              @click="handleEdit(scope.$index, scope.row)"
-            >
+            >Ajouter un Greenscore</el-button>
+            <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">
               <i class="el-icon-edit"></i>
             </el-button>
-            <el-button
-              size="mini"
-              type="danger"
-              @click="handleDelete(scope.row)"
-            >
+            <el-button size="mini" type="danger" @click="handleDelete(scope.row)">
               <i class="el-icon-delete"></i>
             </el-button>
           </template>
@@ -101,6 +87,8 @@
   </div>
 </template>
 
+<!-- STYLE -->
+
 <style lang="scss" scoped>
 .button-container {
   display: flex;
@@ -116,61 +104,41 @@
 }
 </style>
 
+<!-- SCRIPT -->
+
 <script>
 import poiGreenscoreModal from "../poi/poiGreenscoreModal";
 import poiModal from "../poi/poiModal";
 import poiDeleteModal from "../poi/poiDeleteModal";
+import greenscoreValue from "../atoms/greenscoreValue";
 import axios from "axios";
 export default {
   components: {
     poiModal,
     poiDeleteModal,
-    poiGreenscoreModal
+    poiGreenscoreModal,
+    greenscoreValue
   },
   data() {
     return {
-      columns: [
-        {
-          prop: "name",
-          label: "Nom",
-          width: 180
-        },
-        {
-          prop: "description",
-          label: "Type"
-        },
-        {
-          prop: "tags",
-          label: "Tags"
-        },
-
-        {
-          prop: "greenscore",
-          label: "Greenscore"
-        },
-        {
-          prop: "address",
-          label: "Localisation",
-          width: 200
-        }
-      ],
       dataTable: null,
       selectedShop: null,
       showAddModal: false,
       showEditModal: false,
       showGreenscoreModal: false,
-      greenscoreShop: null
+      greenscoreShop: null,
+      test: ""
     };
   },
 
-  computed: {},
-
-  updated() {},
   mounted() {
     axios
       .get(`${window.config.api_root_url}shops`)
       .then(response => (this.dataTable = response.data));
   },
+
+  // METHODS
+
   methods: {
     handleEdit(index, shop) {
       this.selectedShop = shop;
@@ -193,14 +161,12 @@ export default {
       // eslint-disable-next-line no-console
       this.$refs.addGreenscoreModal.open();
     },
-
-    getGreenscore(greenscoreID) {
-      if (greenscoreID) {
-        axios
-          .get(`${window.config.api_root_url}greenscore/${greenscoreID}`)
-          // eslint-disable-next-line no-console
-          .then(resp => console.log(resp.data));
-      }
+    getGreenscore(greenscoreId) {
+      axios
+        .get(`${window.config.api_root_url}greenscore/${greenscoreId}`)
+        .then(resp => {
+          resp.data[0].score.greenscore;
+        });
     }
   }
 };

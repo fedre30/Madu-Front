@@ -23,7 +23,6 @@ export default {
     return {};
   },
   mounted() {
-    console.debug(L.Control.Geocoder); // eslint-disable-line
     this.loading = true;
     const mymap = L.map(this.$refs["mapElement"]).setView(
       [this.coordinates.latitude, this.coordinates.longitude],

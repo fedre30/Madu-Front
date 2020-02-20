@@ -16,6 +16,10 @@ Vue.component("v-icon", Icon);
 Vue.use(ElementUI, {
   locale: locale
 });
+// TODO insérer l'adresse de l'api ici
+window.config = {
+  api_root_url: "http://35.180.73.134:3000/"
+};
 Vue.prototype.$http = Axios;
 const token = localStorage.getItem("token");
 if (token) {
@@ -36,8 +40,3 @@ let app = new Vue({
 window.app = app;
 
 app.$router.push({ name: "home" });
-
-// TODO insérer l'adresse de l'api ici
-window.config = {
-  api_root_url: "http://35.180.73.134:3000/"
-};

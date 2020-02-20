@@ -1,85 +1,76 @@
 <template>
-  <el-dialog
-    :title="isEdit ? 'Modifier commerçant' : 'Ajouter un commerçant'"
-    :visible.sync="showModal"
-    append-to-body
-    width="70%"
-    @close="closeModal"
-  >
+  <el-dialog :visible.sync="showModal" append-to-body width="70%" @close="closeModal">
     <h2>{{ isEdit ? "Modifier" : "Ajouter" }} un commerçant</h2>
     <el-form :model="formData">
       <el-row :gutter="20">
         <el-col :span="24">
-          <el-form-item label="Nom" class="label-style">
+          <el-form-item label="NOM" class="label-style">
             <el-input v-model="formData.name"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="Adresse" class="label-style">
+          <el-form-item label="ADRESSE" class="label-style">
             <el-input v-model="formData.adress"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="Code Postal" class="label-style">
+          <el-form-item label="CODE POSTAL" class="label-style">
             <el-input v-model="formData.zipcode"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="Ville" class="label-style">
+          <el-form-item label="VILLE" class="label-style">
             <el-input v-model="formData.city"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="24">
-          <el-form-item label="Tags" class="label-style">
+          <el-form-item label="TAGS (séparés par des virgules)" class="label-style">
             <el-input v-model="formData.tags"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="Type" class="label-style">
-            <el-select
-              v-model="formData.type"
-              placeholder="Selectionner un type"
-            >
+        <el-col :span="6" style="display: flex; flex-direction: column;">
+          <el-form-item label="TYPE" class="label-style">
+            <el-select v-model="formData.type" placeholder="Selectionner un type">
               <el-option label="Resturant" value="restaurant"></el-option>
               <el-option label="Boutique" value="shop"></el-option>
               <el-option label="Activité" value="activity"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
-          <el-form-item label="Accès au fauteuil roulant" class="label-style">
-            <el-radio v-model="formData.accessibility" label="true" border
-              >Oui</el-radio
-            >
-            <el-radio v-model="formData.accessibility" label="false" border
-              >Non</el-radio
-            >
+        <el-col :span="6">
+          <el-form-item label="ACCES AU FAUTEUIL ROULANT" class="label-style">
+            <el-radio v-model="formData.accessibility" label="true" border>Oui</el-radio>
+            <el-radio v-model="formData.accessibility" label="false" border>Non</el-radio>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="Prix" class="label-style">
-            <i
-              class="el-icon-coin"
-              v-for="(_, index) in 3"
-              :key="index"
-              style="font-size: 1.5rem"
-              @click="onClickIcon"
-              :class="index <= formData.price ? 'activePrice' : 'inactivePrice'"
-            ></i>
+        <el-col :span="6">
+          <el-form-item label="PRIX" class="label-style">
+            <div>
+              <i
+                class="el-icon-coin"
+                v-for="(_, index) in 3"
+                :key="index"
+                style="font-size: 1.5rem"
+                @click="onClickIcon"
+                :class="
+                  index < formData.price ? 'activePrice' : 'inactivePrice'
+                "
+              ></i>
+            </div>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="24">
-          <el-form-item label="Description" class="label-style">
+          <el-form-item label="DESCRIPTION" class="label-style">
             <el-input
               type="textarea"
               v-model="formData.description"
@@ -89,20 +80,30 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <el-row style="margin: 2rem 0" v-if="this.shop && this.shop.greenscore">
+        <el-button type="success" @click="editGreenscore()">Modifier Greenscore</el-button>
+      </el-row>
       <el-row>
-        <el-button type="primary" @click="isEdit ? edit() : addShop()"
-          >Enregistrer</el-button
-        >
+        <el-button type="primary" @click="isEdit ? edit() : addShop()">Enregistrer</el-button>
         <el-button @click="showModal = false">Annuler</el-button>
       </el-row>
     </el-form>
+    <poi-greenscore-modal
+      :shop="shop"
+      :visible="showGreenscoreEdit"
+      ref="editGreenscoreModal"
+      isEdit
+    />
   </el-dialog>
 </template>
 
 <script>
 import axios from "axios";
+import PoiGreenscoreModal from "../poi/poiGreenscoreModal";
 export default {
-  components: {},
+  components: {
+    PoiGreenscoreModal
+  },
 
   props: {
     shop: {
@@ -127,43 +128,38 @@ export default {
         city: "",
         tags: "",
         accessibility: "",
-        price: "",
+        price: 1,
         description: ""
       },
 
-      showModal: this.visible
+      showModal: this.visible,
+      showGreenscoreEdit: false
     };
   },
 
   computed: {},
 
   mounted: function() {
-    const parsedTags = this.shop.tags ? this.shop.tags.join(", ") : "";
-    // eslint-disable-next-line no-console
-    console.log(this.shop.tags);
     this.isEdit ? (this.formData = this.shop) : this.formData;
-    this.isEdit ? (this.formData.tags = parsedTags) : this.formData;
   },
 
   updated: function() {
-    const parsedTags = this.shop.tags ? this.shop.tags.join(", ") : "";
     // eslint-disable-next-line no-console
-    console.log(this.shop.tags);
     this.isEdit ? (this.formData = this.shop) : this.formData;
-    this.isEdit ? (this.formData.tags = parsedTags) : this.formData;
   },
 
   methods: {
     open() {
-      // eslint-disable-next-line no-console
       this.showModal = true;
+      // eslint-disable-next-line no-console
     },
     successCallback() {
       this.$emit("successCallback");
     },
     edit() {
-      this.formData.tags = this.formData.tags.split(", ");
-
+      this.formData.tags = this.formData.tags
+        ? this.formData.tags.split(", ")
+        : null;
       axios.patch(
         `${window.config.api_root_url}shops/update/${this.shop._id}`,
         this.formData
@@ -173,22 +169,28 @@ export default {
     },
 
     onClickIcon() {
-      // eslint-disable-next-line no-console
-      if (this.formData.price <= 3) {
-        this.formData.price += 1;
-      } else {
-        this.formData -= 1;
+      if (this.formData.price < 3) {
+        this.formData.price++;
+      } else if (this.formData.price >= 2) {
+        this.formData.price--;
       }
     },
     addShop() {
-      this.formData.tags = this.formData.tags.split(", ");
+      this.formData.tags = this.formData.tags
+        ? this.formData.tags.split(", ")
+        : null;
       axios.post(`${window.config.api_root_url}shops/add`, this.formData);
+      // eslint-disable-next-line no-console
+      console.log(this.formData);
 
       this.showModal = false;
-      this.$router.go();
     },
     closeModal() {
       this.showModal = false;
+    },
+    editGreenscore() {
+      this.showGreenscoreEdit = true;
+      this.$refs.editGreenscoreModal.open();
     }
   }
 };

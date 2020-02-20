@@ -35,6 +35,11 @@ export default {
           tooltip: "Entreprises"
         },
         {
+          name: "tips",
+          link: "tips",
+          icon: "el-icon-shopping-bag-2"
+        },
+        {
           name: "shops",
           link: "shops",
           icon: "el-icon-shopping-bag-1",

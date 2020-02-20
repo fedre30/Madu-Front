@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import PoiTable from "../components/poi/PoiTable";
+import PoiTable from "../components/poi/poiTable.vue";
 export default {
   components: {
     PoiTable
