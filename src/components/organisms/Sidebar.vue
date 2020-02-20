@@ -35,11 +35,6 @@ export default {
           tooltip: "Entreprises"
         },
         {
-          name: "tips",
-          link: "tips",
-          icon: "el-icon-shopping-bag-2"
-        },
-        {
           name: "shops",
           link: "shops",
           icon: "el-icon-shopping-bag-1",
@@ -50,6 +45,12 @@ export default {
           link: "greenscore",
           icon: "el-icon-apple",
           tooltip: "Critères Greenscore"
+        },
+        {
+          name: "tips",
+          link: "tips",
+          icon: "el-icon-trophy-1",
+          tooltip: "Récompenses"
         }
       ]
     };

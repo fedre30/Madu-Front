@@ -47,7 +47,7 @@ export default {
         `${window.config.api_root_url}shops/delete/${this.shop._id}`
       );
       this.showModal = false;
-      this.$router.go();
+      setTimeout(this.$router.go(), 2000);
     }
   }
 };

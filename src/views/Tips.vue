@@ -1,12 +1,23 @@
 <template>
   <div class="companies">
     <div class="view-header">
-      <h1 class="title">Gestion des tips</h1>
+      <h1 class="title">Gestion des récompenses</h1>
       <div style="margin-top: 15px;">
-        <el-input type="text" class="searchInput" placeholder="Recherche ..." v-model="input3">
-          <el-button class="searchIcon" slot="append" icon="el-icon-search"></el-button>
+        <el-input
+          type="text"
+          class="searchInput"
+          placeholder="Recherche ..."
+          v-model="input3"
+        >
+          <el-button
+            class="searchIcon"
+            slot="append"
+            icon="el-icon-search"
+          ></el-button>
         </el-input>
-        <el-button type="primary" @click="addTip()">Ajouter un commençant</el-button>
+        <el-button type="primary" @click="addTip()"
+          >Ajouter une récomence</el-button
+        >
       </div>
     </div>
     <template>
@@ -28,7 +39,11 @@
         </el-table-column>
         <el-table-column label="Image">
           <div class="demo-image__preview">
-            <el-image class="el-image" style="width: 50px; height: 50px" :src="url"></el-image>
+            <el-image
+              class="el-image"
+              style="width: 50px; height: 50px"
+              :src="url"
+            ></el-image>
           </div>
         </el-table-column>
         <el-table-column label="description">
@@ -39,8 +54,18 @@
         </el-table-column>
         <el-table-column label="Opérations">
           <template slot-scope="scope" size="mini">
-            <el-button class="btn" size="mini" type="default" @click="handleEdit(scope.row)">Éditer</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">
+            <el-button
+              class="btn"
+              size="mini"
+              type="default"
+              @click="handleEdit(scope.row)"
+              >Éditer</el-button
+            >
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)"
+            >
               <i class="el-icon-delete"></i>
             </el-button>
           </template>

@@ -77,7 +77,7 @@ export default {
           reject(err);
         });
     });
-  },
+  }
   // createData(context, payload) {
 
   // }

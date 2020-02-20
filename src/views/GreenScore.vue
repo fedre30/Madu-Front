@@ -19,7 +19,9 @@
         <el-table-column fixed label="Categorie">
           <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
-              <p class="categorie" size="medium">{{ scope.row[0].food.criteria }}</p>
+              <p class="categorie" size="medium">
+                {{ scope.row[0].food.criteria }}
+              </p>
             </div>
           </template>
         </el-table-column>
