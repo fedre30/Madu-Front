@@ -162,7 +162,6 @@ export default {
   data: function() {
     return {
       formData: {
-        id: "",
         food: [{ criteria: "", note: "", coefficient: "" }],
         social: [],
         material: []
