@@ -19,7 +19,9 @@
         <el-table-column fixed label="Categorie">
           <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
-              <p class="categorie" size="medium">{{ scope.row[0].food.criteria }}</p>
+              <p class="categorie" size="medium">
+                {{ scope.row[0].food.criteria }}
+              </p>
             </div>
           </template>
         </el-table-column>
@@ -46,14 +48,9 @@
 <script>
 import axios from "axios";
 export default {
-  components: {},
-
-  props: {},
-
   data: function() {
     return {
-      activeNameType: "first",
-      arctiveNameCriteria: "first",
+      activeNameType: "restaurant",
       resturantData: ""
     };
   },
@@ -63,9 +60,7 @@ export default {
       .get(`${window.config.api_root_url}greenscore/shops/restaurant`)
       .then(response =>
         // eslint-disable-next-line no-console
-        console.log(Object.values(response.data))(
-          (this.resturantData = response.data)
-        )
+        console.log(response.data)((this.resturantData = response.data))
       );
   }
 };

@@ -78,8 +78,6 @@ export default {
     MapModal
   },
 
-  props: {},
-
   data: function() {
     return {
       loading: false,
@@ -97,8 +95,6 @@ export default {
       clientCoords: {}
     };
   },
-
-  computed: {},
 
   mounted: function() {
     this.retrieveData();
