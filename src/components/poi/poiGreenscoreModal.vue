@@ -9,7 +9,10 @@
       <el-row :gutter="40" v-for="(foodCriteria, index) in formData.food" :key="index">
         <el-col :span="8">
           <el-form-item label="Nom du critère" class="label-style">
-            <el-input v-model="formData.food[index].criteria" placeholder="Entrez quelque chose" />
+            <el-autocomplete
+              v-model="formData.food[index].criteria"
+              :fetch-suggestions="foodQuerySearch"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -52,7 +55,10 @@
       <el-row :gutter="20" v-for="(socialCriteria, index) in formData.social" :key="index">
         <el-col :span="8">
           <el-form-item label="Nom du critère" class="label-style">
-            <el-input v-model="formData.social[index].criteria" placeholder="Entrez quelque chose" />
+            <el-autocomplete
+              v-model="formData.social[index].criteria"
+              :fetch-suggestions="socialQuerySearch"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -95,9 +101,9 @@
       <el-row :gutter="20" v-for="(materialCriteria, index) in formData.material" :key="index">
         <el-col :span="8">
           <el-form-item label="Nom du critère" class="label-style">
-            <el-input
+            <el-autocomplete
               v-model="formData.material[index].criteria"
-              placeholder="Entrez quelque chose"
+              :fetch-suggestions="materialQuerySearch"
             />
           </el-form-item>
         </el-col>
@@ -167,13 +173,26 @@ export default {
         material: []
       },
       showModal: false,
-      foodSuggestions: null
+      foodSuggestions: [],
+      socialSuggestions: [],
+      materialSuggestions: []
     };
   },
 
   computed: {},
 
   mounted: function() {
+    axios
+      .get(`${window.config.api_root_url}greenscore/shops/restaurant`)
+      .then(resp => (this.foodSuggestions = resp.data[0].food));
+    axios
+      .get(`${window.config.api_root_url}greenscore/shops/restaurant`)
+      .then(resp => (this.socialSuggestions = resp.data[0].social));
+
+    axios
+      .get(`${window.config.api_root_url}greenscore/shops/restaurant`)
+      .then(resp => (this.materialSuggestions = resp.data[0].material));
+
     this.isEdit
       ? axios
           .get(
@@ -211,59 +230,59 @@ export default {
       this.formData[category].splice(id, 1);
     },
 
-    getSuggestions(category) {
-      axios
-        .get(`${window.config.api_root_url}greenscore/shops/${category}`)
-        .then(resp =>
-          // eslint-disable-next-line no-console
-          console.log(resp.data)
-        );
-    },
     editGreenscore() {
       axios.patch(
         `${window.config.api_root_url}greenscore/update/${this.shop.greenscore}`,
         this.formData
       );
       this.showModal = false;
+    },
+    foodQuerySearch(queryString, cb) {
+      const array = this.foodSuggestions.map(
+        food => (food["value"] = food["criteria"])
+      );
+      const parsedArray = array.map(t => {
+        return { value: t };
+      });
+      var results = queryString
+        ? parsedArray.filter(this.createFilter(queryString))
+        : parsedArray;
+
+      cb(results);
+    },
+    socialQuerySearch(queryString, cb) {
+      const array = this.socialSuggestions.map(
+        social => (social["value"] = social["criteria"])
+      );
+      const parsedArray = array.map(t => {
+        return { value: t };
+      });
+      var results = queryString
+        ? parsedArray.filter(this.createFilter(queryString))
+        : parsedArray;
+
+      cb(results);
+    },
+    materialQuerySearch(queryString, cb) {
+      const array = this.materialSuggestions.map(
+        material => (material["value"] = material["criteria"])
+      );
+      const parsedArray = array.map(t => {
+        return { value: t };
+      });
+      var results = queryString
+        ? parsedArray.filter(this.createFilter(queryString))
+        : parsedArray;
+
+      cb(results);
+    },
+    createFilter(queryString) {
+      return sugg => {
+        return (
+          sugg.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+        );
+      };
     }
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.label-style {
-  font-weight: bold;
-  label {
-    text-transform: uppercase;
-  }
-}
-
-.greenscore-icon {
-  width: 100%;
-  display: flex;
-}
-.greenscore-picto {
-  width: 2rem;
-
-  i {
-    font-size: 2rem;
-  }
-}
-
-.greenscore-icon-label {
-  margin-left: 0.5rem;
-  margin-bottom: 0;
-}
-
-.greenscore-value {
-  display: flex;
-  flex-direction: column;
-}
-.activePrice {
-  color: rgba(192, 197, 210, 1);
-}
-
-.inactivePrice {
-  color: rgba(192, 197, 210, 0.3);
-}
-</style>
