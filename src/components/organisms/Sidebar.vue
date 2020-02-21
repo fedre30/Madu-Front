@@ -41,12 +41,6 @@ export default {
           tooltip: "POI"
         },
         {
-          name: "greenscore",
-          link: "greenscore",
-          icon: "el-icon-apple",
-          tooltip: "Critères Greenscore"
-        },
-        {
           name: "tips",
           link: "tips",
           icon: "el-icon-trophy-1",
