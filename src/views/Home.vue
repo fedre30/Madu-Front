@@ -1,10 +1,24 @@
 <template>
-  <div class="home">
+  <div
+    v-loading="loadingPos || loadingMarkersPOI || loadingMarkersCompanies"
+    class="home"
+  >
+    <el-radio-group
+      v-model="showOptions"
+      size="small"
+      style="margin-bottom: 20px;"
+    >
+      <el-radio-button label="poi">Point d'intérêt</el-radio-button>
+      <el-radio-button label="both"
+        >Points d'intérêt et entreprises</el-radio-button
+      >
+      <el-radio-button label="companies">Entreprises</el-radio-button>
+    </el-radio-group>
     <Map
-      v-loading="loadingPos || loadingMarkers"
       :coordinates="coordinates"
       :key="keygen"
       :mapData="mapData"
+      :mapDataAlt="mapDataAlt"
     />
   </div>
 </template>
@@ -21,54 +35,96 @@ export default {
   data: function() {
     return {
       loadingPos: false,
-      loadingMarkers: false,
+      loadingMarkersPOI: false,
+      loadingMarkersCompanies: false,
       coordinates: {
         latitude: 48.864716,
         longitude: 2.349014
       },
-      mapData: []
+      mapData: [],
+      mapDataAlt: [],
+      showOptions: "poi",
+      pois: [],
+      companies: []
     };
+  },
+  watch: {
+    showOptions(val) {
+      this.mapData = [];
+      this.mapDataAlt = [];
+      if (val === "poi" || val === "both") {
+        this.mapData = this.pois;
+      }
+      if (val === "companies" || val === "both") {
+        this.mapDataAlt = this.companies;
+      }
+    }
   },
   computed: {
     keygen() {
-      return `${this.coordinates.latitude}${this.coordinates.longitude}${this.mapData.length}`;
+      return `${this.coordinates.latitude}${this.coordinates.longitude}${this.mapData.length}${this.mapDataAlt.length}`;
     }
   },
   mounted() {
-    this.loadingPos = true;
-    this.loadingMarkers = true;
-    navigator.geolocation.getCurrentPosition(
-      pos => {
-        this.$set(this.coordinates, "latitude", pos.coords.latitude);
-        this.$set(this.coordinates, "longitude", pos.coords.longitude);
-        this.loadingPos = false;
-      },
-      error => {
-        console.error(error); //eslint-disable-line
-        this.loadingPos = false;
-      }
-    );
-    this.fetchData({ modelName: "shops" }).then(resp => {
-      resp.data.forEach((poi, index) => {
-        openGeocoder()
-          .geocode(`${poi.adress}, ${poi.zipcode} ${poi.city}`)
-          .end((err, res) => {
-            this.mapData.push({
-              name: poi.name,
-              coords: {
-                latitude: res[0].lat,
-                longitude: res[0].lon
-              }
-            });
-            if (index + 1 === resp.data.length) {
-              this.loadingMarkers = false;
-            }
-          });
-      });
-    });
+    this.fetchMapData();
   },
   methods: {
-    ...mapActions(["fetchData"])
+    ...mapActions(["fetchData"]),
+    fetchMapData() {
+      this.loadingPos = true;
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          this.$set(this.coordinates, "latitude", pos.coords.latitude);
+          this.$set(this.coordinates, "longitude", pos.coords.longitude);
+          this.loadingPos = false;
+        },
+        error => {
+          console.error(error); //eslint-disable-line
+          this.loadingPos = false;
+        }
+      );
+      this.loadingMarkersPOI = true;
+      this.fetchData({ modelName: "shops" }).then(resp => {
+        resp.data.forEach((poi, index) => {
+          openGeocoder()
+            .geocode(`${poi.adress}, ${poi.zipcode} ${poi.city}`)
+            .end((err, res) => {
+              this.pois.push({
+                name: poi.name,
+                coords: {
+                  latitude: res[0].lat,
+                  longitude: res[0].lon
+                }
+              });
+              if (index + 1 === resp.data.length) {
+                this.loadingMarkersPOI = false;
+                this.mapData = this.pois;
+              }
+            });
+        });
+      });
+      this.loadingMarkersCompanies = true;
+      this.fetchData({ modelName: "structures" }).then(resp => {
+        resp.data.forEach((structure, index) => {
+          openGeocoder()
+            .geocode(
+              `${structure.address}, ${structure.zipCode} ${structure.city}`
+            )
+            .end((err, res) => {
+              this.companies.push({
+                name: structure.name,
+                coords: {
+                  latitude: res[0].lat,
+                  longitude: res[0].lon
+                }
+              });
+              if (index + 1 === resp.data.length) {
+                this.loadingMarkersCompanies = false;
+              }
+            });
+        });
+      });
+    }
   }
 };
 </script>

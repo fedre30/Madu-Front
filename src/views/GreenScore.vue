@@ -58,10 +58,9 @@ export default {
   mounted: function() {
     axios
       .get(`${window.config.api_root_url}greenscore/shops/restaurant`)
-      .then(response =>
-        // eslint-disable-next-line no-console
-        console.log(response.data)((this.resturantData = response.data))
-      );
+      .then(response => {
+        this.resturantData = response.data;
+      });
   }
 };
 </script>
