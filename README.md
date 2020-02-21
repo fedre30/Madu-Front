@@ -96,20 +96,20 @@ yarn lint
 
 #### Rôles
     
-    - `install_docker`: Docker setup on AWS Instance
-    - `pull_and_run_docker_image`: Pull and Run of a docker image
+- `install_docker`: Docker setup on AWS Instance
+- `pull_and_run_docker_image`: Pull and Run of a docker image
 
 #### Commande
 
-    `ansible-playbook -i ./ansible/inventory/hosts ./ansible/roles/install_docker.yml --key <your_key> --user ubuntu`
-    `ansible-playbook -i ./ansible/inventory/hosts ./ansible/roles/pull_and_run_docker_image.yml --key <your_key> --user ubuntu`
+`ansible-playbook -i ./ansible/inventory/hosts ./ansible/roles/install_docker.yml --key <your_key> --user ubuntu`
+`ansible-playbook -i ./ansible/inventory/hosts ./ansible/roles/pull_and_run_docker_image.yml --key <your_key> --user ubuntu`
 
 ### Terraform
 
-    - variables: `key_path` (path to your public key)
+- variables: `key_path` (path to your public key)
 
-    - An instance EC2 on Ubuntu 18.04 
-    - A security group allowing the port 22 and 8080 for the app
+- An instance EC2 on Ubuntu 18.04 
+- A security group allowing the port 22 and 8080 for the app
 
-    `terraform init`
-    `terraform apply`
+`terraform init`
+`terraform apply`
