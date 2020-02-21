@@ -7,7 +7,7 @@
     @close="showModal = false"
   >
     <div class="content">
-      Êtes-vous sûr(e) de vouloir archiver {{ modelName }}
+      Êtes-vous sûr(e) de vouloir archiver {{ modelName }} ?
     </div>
     <span slot="footer">
       <el-button @click="showModal = false">Annuler</el-button>
@@ -34,6 +34,7 @@ export default {
   methods: {
     successCallback() {
       this.$emit("successCallback");
+      this.showModal = false;
     },
     open() {
       this.showModal = true;
