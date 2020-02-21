@@ -102,6 +102,7 @@ yarn lint
 #### Commande
 
 `ansible-playbook -i ./ansible/inventory/hosts ./ansible/roles/install_docker.yml --key <your_key> --user ubuntu`
+
 `ansible-playbook -i ./ansible/inventory/hosts ./ansible/roles/pull_and_run_docker_image.yml --key <your_key> --user ubuntu`
 
 ### Terraform
