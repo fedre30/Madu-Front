@@ -1,6 +1,17 @@
 <template>
   <div class="">
-    <Map v-loading="loading" :coordinates="coordinates" :mapData="mapData" />
+    <el-dialog
+      title="Archivage"
+      :visible.sync="showModal"
+      width="60%"
+      append-to-body
+      @close="showModal = false"
+    >
+      <Map :coordinates="coordinates" :mapDataAlt="mapDataAlt" />
+      <span slot="footer">
+        <el-button @click="showModal = false">Fermer</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -8,6 +19,10 @@
 export default {
   props: {
     selectedClient: {
+      type: Object,
+      required: true
+    },
+    clientCoords: {
       type: Object,
       required: true
     }
@@ -18,13 +33,16 @@ export default {
       coordinates: {
         latitude: 48.864716,
         longitude: 2.349014
-      }
+      },
+      showModal: false
     };
   },
 
   computed: {
-    mapData() {
-      return [];
+    mapDataAlt() {
+      let mapData = []
+      mapData.push(this.selectedClient);
+      return mapData;
     }
   },
 
@@ -32,7 +50,11 @@ export default {
     console.debug(this.selectedClient); // eslint-disable-line
   },
 
-  methods: {}
+  methods: {
+    open() {
+      this.showModal = true;
+    }
+  }
 };
 </script>
 
