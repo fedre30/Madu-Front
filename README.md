@@ -18,7 +18,16 @@ Developing a Back-office whose feature are:
 * Map of existing POIs and clients.
 * Login
 
-## Stack choices
+## Stack choices 📦
+
+### Libraries 📕
+
+* [Vue](https://vuejs.org)
+* [vuex](https://vuex.vuejs.org)
+* [element-ui](https://element.eleme.io/#/fr-FR) 
+* [Vue-router](https://router.vuejs.org)
+* [leaflet](https://leafletjs.com)
+* [node-open-geocoder](https://github.com/joaquimserafim/node-open-geocoder)
 
 ### Why Vue.js?
 Vue.js is a very light Javascript framework that allows to easily build up to medium-size Apps.
@@ -46,6 +55,11 @@ So, we chose Leaflet over other APIs because it is widely used in Javascript-bui
 * Joel Pokam (Frontend Developer)
 
 
+### Link 🐼
+
+[http://35.180.164.83:8080/](http://35.180.164.83:8080/)
+
+
 ## Project setup 🚀
 ```
 yarn install
@@ -70,20 +84,5 @@ yarn test:unit
 ```
 yarn lint
 ```
-
-
-### Libraries
-
-* Vue
-* vuex
-* [element-ui](https://element.eleme.io/#/fr-FR) 
-* vue-awesome
-* vue-router
-* [leaflet](https://leafletjs.com)
-* node-open-geocoder
-
-### Link
-
-TBT
 
 
