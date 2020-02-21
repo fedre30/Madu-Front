@@ -38,9 +38,9 @@
               >Voir la fiche</el-button
             >
             <el-button
-              class="delete-button"
               icon="el-icon-delete"
               size="mini"
+              type="danger"
               @click="openArchiveModal(scope.row)"
             ></el-button>
           </div>
@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import ArchiveModal from "../components/organisms/archiveModal.vue";
 import ClientModal from "../components/organisms/editClientModal.vue";
 import openGeocoder from "node-open-geocoder";
@@ -139,7 +140,10 @@ export default {
       this.$refs.archiveModal.open();
     },
     archiveClient() {
-      console.debug("open archive modal"); // eslint-disable-line
+      axios.delete(
+        `${window.config.api_root_url}structures/delete/${this.selectedClient._id}`
+      );
+      this.showModal = false;
     },
     openCreationModal() {
       this.selectedClient = {};

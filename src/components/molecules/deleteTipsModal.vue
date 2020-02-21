@@ -47,7 +47,6 @@ export default {
         `${window.config.api_root_url}rewards/delete/${this.tip._id}`
       );
       this.showModal = false;
-      setTimeout(this.$router.go(), 2000);
     }
   }
 };

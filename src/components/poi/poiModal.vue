@@ -48,7 +48,7 @@
               v-model="formData.type"
               placeholder="Selectionner un type"
             >
-              <el-option label="Resturant" value="restaurant"></el-option>
+              <el-option label="Restaurant" value="restaurant"></el-option>
               <el-option label="Boutique" value="shop"></el-option>
               <el-option label="Activité" value="activity"></el-option>
             </el-select>
@@ -157,10 +157,12 @@ export default {
 
   mounted: function() {
     this.isEdit ? (this.formData = this.shop) : this.formData;
+    if (this.isEdit) {
+      this.formData.tags = this.formData.tags.join(", ");
+    }
   },
 
   updated: function() {
-    // eslint-disable-next-line no-console
     this.isEdit ? (this.formData = this.shop) : this.formData;
   },
 
