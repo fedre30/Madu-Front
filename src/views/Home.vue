@@ -85,6 +85,9 @@ export default {
       );
       this.loadingMarkersPOI = true;
       this.fetchData({ modelName: "shops" }).then(resp => {
+        if (resp.data.length === 0) {
+          this.loadingMarkersPOI = false;
+        }
         resp.data.forEach((poi, index) => {
           openGeocoder()
             .geocode(`${poi.adress}, ${poi.zipcode} ${poi.city}`)
@@ -105,6 +108,9 @@ export default {
       });
       this.loadingMarkersCompanies = true;
       this.fetchData({ modelName: "structures" }).then(resp => {
+        if (resp.data.length === 0) {
+          this.loadingMarkersCompanies = false;
+        }
         resp.data.forEach((structure, index) => {
           openGeocoder()
             .geocode(
