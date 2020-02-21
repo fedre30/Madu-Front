@@ -180,7 +180,7 @@ export default {
         `${window.config.api_root_url}shops/update/${this.shop._id}`,
         this.formData
       );
-      setTimeout(this.$router.go(), 2000);
+      // setTimeout(this.$router.go(), 3000);
       this.showModal = false;
     },
 
@@ -196,7 +196,7 @@ export default {
         ? this.formData.tags.split(", ")
         : null;
       axios.post(`${window.config.api_root_url}shops/add`, this.formData);
-      setTimeout(this.$router.go(), 2000);
+      //setTimeout(this.$router.go(), 5000);
       this.showModal = false;
     },
     closeModal() {

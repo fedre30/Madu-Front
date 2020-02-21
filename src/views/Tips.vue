@@ -48,9 +48,13 @@
             <span style="margin-right: 10px">{{ scope.row.description }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="Lien Vidéo Youtube">
+        <el-table-column label="Lien Vidéo Youtube" width="350">
           <template slot-scope="scope">
-            <span style="margin-right: 10px">{{ scope.row.videoLink }}</span>
+            <el-link :href="scope.row.videoLink" target="__blank"
+              ><span style="margin-right: 10px">{{
+                scope.row.videoLink
+              }}</span></el-link
+            >
           </template>
         </el-table-column>
         <el-table-column label="Points minimaux">
