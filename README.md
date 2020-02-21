@@ -55,10 +55,15 @@ So, we chose Leaflet over other APIs because it is widely used in Javascript-bui
 * Joel Pokam (Frontend Developer)
 
 
-### Link 🐼
+## Link 🐼
 
 [http://35.180.164.83:8080/](http://35.180.164.83:8080/)
 
+### Login credentials 🔑
+
+**username**: `chrystal.leliegard@madu.net`
+
+**password**: `madu`
 
 ## Project setup 🚀
 ```
