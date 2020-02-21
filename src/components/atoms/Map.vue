@@ -16,7 +16,15 @@ export default {
     },
     mapData: {
       type: Array,
-      required: true
+      default: () => {
+        return [];
+      }
+    },
+    mapDataAlt: {
+      type: Array,
+      default: () => {
+        return [];
+      }
     }
   },
   data: function() {
@@ -43,6 +51,22 @@ export default {
       L.marker([shop.coords.latitude, shop.coords.longitude])
         .addTo(mymap)
         .bindPopup(shop.name)
+        .openPopup();
+    });
+
+    var companyIcon = L.icon({
+      iconUrl: "https://image.flaticon.com/icons/svg/2599/2599741.svg",
+
+      iconSize: [38, 38],
+      iconAnchor: [22, 94],
+      popupAnchor: [-3, -86]
+    });
+    this.mapDataAlt.forEach(structure => {
+      L.marker([structure.coords.latitude, structure.coords.longitude], {
+        icon: companyIcon
+      })
+        .addTo(mymap)
+        .bindPopup(structure.name)
         .openPopup();
     });
   }

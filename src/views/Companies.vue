@@ -31,12 +31,6 @@
         <template slot-scope="scope">
           <div class="buttons">
             <el-button
-              class="map-button"
-              icon="el-icon-location-outline"
-              size="mini"
-              @click="openMapModal(scope.row)"
-            ></el-button>
-            <el-button
               class="edit-button"
               type="primary"
               size="mini"
@@ -58,7 +52,6 @@
       modelName="client"
       @successCallback="archiveClient"
     ></archive-modal>
-    <map-modal :selectedClient="selectedClient"></map-modal>
     <client-modal ref="clientModal" :client="selectedClient"></client-modal>
   </div>
 </template>
@@ -68,20 +61,19 @@ import axios from "axios";
 import ArchiveModal from "../components/organisms/archiveModal.vue";
 import ClientModal from "../components/organisms/editClientModal.vue";
 import openGeocoder from "node-open-geocoder";
-import MapModal from "../components/organisms/mapModal.vue";
 import { mapActions } from "vuex";
 
 // search
 export default {
   components: {
     ArchiveModal,
-    ClientModal,
-    MapModal
+    ClientModal
   },
 
   data: function() {
     return {
       loading: false,
+      loadingMap: false,
       clients: [],
       selectedClient: {},
       fakeData: [
@@ -97,6 +89,12 @@ export default {
     };
   },
 
+  computed: {
+    keygen() {
+      return this.selectedClient.name;
+    }
+  },
+
   mounted: function() {
     this.retrieveData();
   },
@@ -109,7 +107,6 @@ export default {
         modelName: "structures"
       })
         .then(resp => {
-          console.debug(resp.data); //eslint-disable-line
           this.clients = resp.data;
         })
         .catch(err => {
@@ -122,20 +119,20 @@ export default {
     editClient(client) {
       this.selectedClient = client;
       this.$refs.clientModal.open();
-      console.debug("open edit modal"); // eslint-disable-line
     },
     openMapModal(client) {
+      this.loadingMap = true;
       openGeocoder()
-        .geocode(this.fakeData.address)
+        .geocode(`${client.address}, ${client.zipCode} ${client.city}`)
         .end((err, res) => {
-          console.debug(res); // eslint-disable-line
           this.selectedClient = client;
           this.clientCoords = {
-            lat: res.lat,
-            lon: res.lon
+            lat: res[0].lat,
+            lon: res[0].lon
           };
+          this.loadingMap = false;
+          this.$refs.mapModal.open();
         });
-      console.debug("open map modal"); // eslint-disable-line
     },
     openArchiveModal(client) {
       this.selectedClient = client;

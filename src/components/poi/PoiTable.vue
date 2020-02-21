@@ -164,13 +164,11 @@ export default {
     },
     addShop() {
       this.showAddModal = true;
-      // eslint-disable-next-line no-console
       this.$refs.addPoiModal.open();
     },
     handleGreenscore(shop) {
       this.greenscoreShop = shop;
       this.showGreenscoreModal = true;
-      // eslint-disable-next-line no-console
       this.$refs.addGreenscoreModal.open();
     },
     getGreenscore(greenscoreId) {

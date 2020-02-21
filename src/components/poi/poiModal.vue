@@ -169,7 +169,6 @@ export default {
   methods: {
     open() {
       this.showModal = true;
-      // eslint-disable-next-line no-console
     },
     successCallback() {
       this.$emit("successCallback");
