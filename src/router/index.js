@@ -5,7 +5,6 @@ import PointsOfInterest from "../views/PointsOfInterest.vue";
 import EditPoi from "../views/EditPointOfInterest.vue";
 import Companies from "../views/Companies.vue";
 import Company from "../views/Company.vue";
-import Edit from "../views/Edit.vue";
 import GreenScore from "../views/GreenScore.vue";
 import Tips from "../views/Tips.vue";
 
@@ -16,12 +15,6 @@ const routes = [
     path: "/",
     name: "home",
     component: Home
-  },
-
-  {
-    path: "/Edit",
-    name: "Edit",
-    component: Edit
   },
   {
     path: "/greenscore",

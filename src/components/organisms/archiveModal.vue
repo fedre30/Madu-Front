@@ -18,8 +18,6 @@
 
 <script>
 export default {
-  components: {},
-
   props: {
     modelName: {
       type: String,
@@ -32,10 +30,6 @@ export default {
       showModal: false
     };
   },
-
-  computed: {},
-
-  mounted: function() {},
 
   methods: {
     successCallback() {

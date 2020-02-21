@@ -2,7 +2,9 @@
   <div class="container">
     <div class="button-container">
       <el-row justify="end" style="margin-bottom: 2rem">
-        <el-button class="btn" type="primary" @click="addShop()">Ajouter un commerçant</el-button>
+        <el-button class="btn" type="primary" @click="addShop()"
+          >Ajouter un commerçant</el-button
+        >
       </el-row>
     </div>
     <template>
@@ -24,7 +26,8 @@
               style="margin-right: 10px"
               v-for="(tag, index) in scope.row.tags"
               :key="index"
-            >#{{ tag }}</span>
+              >#{{ tag }}</span
+            >
           </template>
         </el-table-column>
         <el-table-column label="Greenscore" width="150">
@@ -63,11 +66,20 @@
               type="success"
               @click="handleGreenscore(scope.row)"
               v-if="!scope.row.greenscore"
-            >Ajouter un Greenscore</el-button>
-            <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">
+              >Ajouter un Greenscore</el-button
+            >
+            <el-button
+              size="mini"
+              type="primary"
+              @click="handleEdit(scope.$index, scope.row)"
+            >
               <i class="el-icon-edit"></i>
             </el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.row)">
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleDelete(scope.row)"
+            >
               <i class="el-icon-delete"></i>
             </el-button>
           </template>

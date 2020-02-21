@@ -6,10 +6,10 @@
     append-to-body
     @close="showModal = false"
   >
-    Êtes-vous sûr(e) de vouloir supprimer {{ shop ? shop.name : "ce lieu" }} ?
+    Êtes-vous sûr(e) de vouloir supprimer {{ tip ? tip.name : "ce lieu" }} ?
     <span slot="footer">
       <el-button @click="showModal = false">Annuler</el-button>
-      <el-button type="primary" @click="deleteShop()">Supprimer</el-button>
+      <el-button type="primary" @click="deletetip()">Supprimer</el-button>
     </span>
   </el-dialog>
 </template>
@@ -20,7 +20,7 @@ export default {
   components: {},
 
   props: {
-    shop: {
+    tip: {
       type: Object,
       default: () => {
         return {};
@@ -42,9 +42,9 @@ export default {
     open() {
       this.showModal = true;
     },
-    deleteShop() {
+    deletetip() {
       axios.delete(
-        `${window.config.api_root_url}shops/delete/${this.shop._id}`
+        `${window.config.api_root_url}rewards/delete/${this.tip._id}`
       );
       this.showModal = false;
       setTimeout(this.$router.go(), 2000);
