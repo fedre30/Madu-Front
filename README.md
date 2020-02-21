@@ -112,4 +112,5 @@ yarn lint
 - A security group allowing the port 22 and 8080 for the app
 
 `terraform init`
+
 `terraform apply`
