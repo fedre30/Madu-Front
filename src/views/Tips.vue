@@ -1,46 +1,77 @@
 <template>
   <div class="companies">
     <div class="view-header">
-      <h1 class="title">Gestion des tips</h1>
+      <h1 class="title">Gestion des récompenses</h1>
       <div style="margin-top: 15px;">
-        <el-input type="text" class="searchInput" placeholder="Recherche ..." v-model="input3">
-          <el-button class="searchIcon" slot="append" icon="el-icon-search"></el-button>
+        <el-input
+          type="text"
+          class="searchInput"
+          placeholder="Recherche ..."
+          v-model="input3"
+        >
+          <el-button
+            class="searchIcon"
+            slot="append"
+            icon="el-icon-search"
+          ></el-button>
         </el-input>
-        <el-button type="primary" @click="addTip()">Ajouter un commençant</el-button>
+        <el-button type="primary" @click="addTip()"
+          >Ajouter une récompense</el-button
+        >
       </div>
     </div>
     <template>
       <el-table
         header-cell-class-name="header-cell"
         class="el-table"
-        :data="tableData"
+        :data="tipData"
         style="width: 100%"
       >
-        <el-table-column fixed label="Nom">
-          <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-              <p class="categorie">Nom: {{ scope.row.categorie }}</p>
-              <div slot="reference" class="name-wrapper">
-                <p class="categorie" size="medium">{{ scope.row.categorie }}</p>
-              </div>
-            </el-popover>
-          </template>
-        </el-table-column>
         <el-table-column label="Image">
           <div class="demo-image__preview">
-            <el-image class="el-image" style="width: 50px; height: 50px" :src="url"></el-image>
+            <el-image
+              class="el-image"
+              style="width: 50px; height: 50px"
+              :src="url"
+            ></el-image>
           </div>
         </el-table-column>
+        <el-table-column fixed label="Nom">
+          <template slot-scope="scope">
+            <div slot="reference" class="name-wrapper">
+              <p class="categorie" size="medium">{{ scope.row.name }}</p>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="description">
-          <el-progress type="circle" :percentage="25"></el-progress>
           <template slot-scope="scope">
             <span style="margin-right: 10px">{{ scope.row.description }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="Lien Vidéo Youtube">
+          <template slot-scope="scope">
+            <span style="margin-right: 10px">{{ scope.row.videoLink }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="Points minimaux">
+          <template slot-scope="scope">
+            <span style="margin-right: 10px">{{ scope.row.points }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="Opérations">
           <template slot-scope="scope" size="mini">
-            <el-button class="btn" size="mini" type="default" @click="handleEdit(scope.row)">Éditer</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">
+            <el-button
+              class="btn"
+              size="mini"
+              type="default"
+              @click="handleEdit(scope.row)"
+              >Éditer</el-button
+            >
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleDelete(scope.row)"
+            >
               <i class="el-icon-delete"></i>
             </el-button>
           </template>
@@ -49,17 +80,19 @@
     </template>
     <tips-modal ref="editTipsModal" :tip="selectedTip" isEdit />
     <tips-modal ref="addTipsModal" />
+    <delete-tips-modal ref="deleteTipModal" :tip="selectedTip" />
   </div>
 </template>
 
 <script>
+import axios from "axios";
 import TipsModal from "../components/molecules/TipsModal";
+import DeleteTipsModal from "../components/molecules/deleteTipsModal";
 export default {
   components: {
-    TipsModal
+    TipsModal,
+    DeleteTipsModal
   },
-
-  props: {},
 
   data: function() {
     return {
@@ -67,47 +100,32 @@ export default {
       activeName: "first",
       url:
         "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-      tableData: [
-        {
-          categorie: "Tips 1",
-          description: "Lorem ipsum dolor sit amet "
-        },
-        {
-          categorie: "Tips 2",
-          description: "Lorem ipsum dolor sit amet "
-        },
-        {
-          categorie: "Tips 3",
-          description: "Lorem ipsum dolor sit amet "
-        },
-        {
-          categorie: "Tips 4",
-          description: "Lorem ipsum dolor sit amet "
-        },
-
-        {
-          categorie: "Tips 5",
-          description: "Lorem ipsum dolor sit amet "
-        },
-        {
-          categorie: "Tips 6",
-          description:
-            "Suspendisse condimentum malesuada pulvinar. Integer sit amet ante sit amet tortor vehicula molestie."
-        }
-      ],
-      selectedTip: null
+      tipData: [],
+      selectedTip: null,
+      showAddModal: false,
+      showEditModal: false
     };
   },
-  computed: {},
-  mounted: function() {},
+  mounted: function() {
+    axios
+      .get(`${window.config.api_root_url}rewards`)
+      // eslint-disable-next-line no-console
+      .then(response => (this.tipData = response.data));
+  },
 
   methods: {
     handleEdit(tip) {
       this.selectedTip = tip;
+      this.showEditModal = true;
       this.$refs.editTipsModal.open();
+    },
+    handleDelete(tip) {
+      this.selectedTip = tip;
+      this.$refs.deleteTipModal.open();
     },
 
     addTip() {
+      this.showAddModal = true;
       this.$refs.addTipsModal.open();
     }
   }

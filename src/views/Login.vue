@@ -39,10 +39,6 @@ export default {
     };
   },
 
-  computed: {},
-
-  mounted: function() {},
-
   methods: {
     login(event) {
       event.preventDefault();

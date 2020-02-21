@@ -1,15 +1,20 @@
 <template>
-  <el-dialog :visible.sync="showModal" append-to-body width="70%" @close="closeModal">
+  <el-dialog
+    :visible.sync="showModal"
+    append-to-body
+    width="70%"
+    @close="closeModal"
+  >
     <h2>{{ isEdit ? "Modifier" : "Ajouter" }} un commerçant</h2>
     <el-form :model="formData">
-      <el-row :gutter="20">
+      <el-row :gutter="20" style="margin: 1rem 0">
         <el-col :span="24">
           <el-form-item label="NOM" class="label-style">
             <el-input v-model="formData.name"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="20" style="margin: 1rem 0">
         <el-col :span="12">
           <el-form-item label="ADRESSE" class="label-style">
             <el-input v-model="formData.adress"></el-input>
@@ -26,31 +31,41 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="20" style="margin: 1rem 0">
         <el-col :span="24">
-          <el-form-item label="TAGS (séparés par des virgules)" class="label-style">
+          <el-form-item
+            label="TAGS (séparés par des virgules)"
+            class="label-style"
+          >
             <el-input v-model="formData.tags"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="20" style="margin: 1rem 0">
         <el-col :span="6" style="display: flex; flex-direction: column;">
           <el-form-item label="TYPE" class="label-style">
-            <el-select v-model="formData.type" placeholder="Selectionner un type">
+            <el-select
+              v-model="formData.type"
+              placeholder="Selectionner un type"
+            >
               <el-option label="Resturant" value="restaurant"></el-option>
               <el-option label="Boutique" value="shop"></el-option>
               <el-option label="Activité" value="activity"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="8">
           <el-form-item label="ACCES AU FAUTEUIL ROULANT" class="label-style">
-            <el-radio v-model="formData.accessibility" label="true" border>Oui</el-radio>
-            <el-radio v-model="formData.accessibility" label="false" border>Non</el-radio>
+            <el-radio v-model="formData.accessibility" label="true" border
+              >Oui</el-radio
+            >
+            <el-radio v-model="formData.accessibility" label="false" border
+              >Non</el-radio
+            >
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="20" style="margin: 1rem 0">
         <el-col :span="6">
           <el-form-item label="PRIX" class="label-style">
             <div>
@@ -68,23 +83,26 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="20" style="margin: 1rem 0">
         <el-col :span="24">
           <el-form-item label="DESCRIPTION" class="label-style">
             <el-input
               type="textarea"
               v-model="formData.description"
-              maxlength="100"
               show-word-limit
             ></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row style="margin: 2rem 0" v-if="this.shop && this.shop.greenscore">
-        <el-button type="success" @click="editGreenscore()">Modifier Greenscore</el-button>
+        <el-button type="success" @click="editGreenscore()"
+          >Modifier Greenscore</el-button
+        >
       </el-row>
       <el-row>
-        <el-button type="primary" @click="isEdit ? edit() : addShop()">Enregistrer</el-button>
+        <el-button type="primary" @click="isEdit ? edit() : addShop()"
+          >Enregistrer</el-button
+        >
         <el-button @click="showModal = false">Annuler</el-button>
       </el-row>
     </el-form>
@@ -137,8 +155,6 @@ export default {
     };
   },
 
-  computed: {},
-
   mounted: function() {
     this.isEdit ? (this.formData = this.shop) : this.formData;
   },
@@ -164,14 +180,14 @@ export default {
         `${window.config.api_root_url}shops/update/${this.shop._id}`,
         this.formData
       );
+      setTimeout(this.$router.go(), 2000);
       this.showModal = false;
-      this.$router.go();
     },
 
     onClickIcon() {
       if (this.formData.price < 3) {
         this.formData.price++;
-      } else if (this.formData.price >= 2) {
+      } else {
         this.formData.price--;
       }
     },
@@ -180,9 +196,7 @@ export default {
         ? this.formData.tags.split(", ")
         : null;
       axios.post(`${window.config.api_root_url}shops/add`, this.formData);
-      // eslint-disable-next-line no-console
-      console.log(this.formData);
-
+      setTimeout(this.$router.go(), 2000);
       this.showModal = false;
     },
     closeModal() {

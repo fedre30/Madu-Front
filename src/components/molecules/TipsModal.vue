@@ -2,29 +2,41 @@
   <el-dialog
     :visible.sync="showModal"
     append-to-body
-    width="70%"
+    width="60%"
     @close="showModal = false"
-    class="yep"
   >
-    <h2 class="title">{{ isEdit ? "Modifier" : "Ajouter" }} un tips</h2>
-    <el-form :model="formData">
+    <h2 class="title">{{ isEdit ? "Modifier" : "Ajouter" }} une récompense</h2>
+    <el-form :model="tipData">
       <el-row :gutter="20">
-        <el-col :span="8"> </el-col>
         <el-col :span="8">
-          <el-form-item class="text" label="Nom du critère">
-            <el-input v-model="formData.name"></el-input>
+          <el-form-item class="text" label="Nom de la récompense">
+            <el-input v-model="tipData.name"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="8"> </el-col>
+        <el-col :span="8">
+          <el-form-item class="text" label="Nombre de points demandés">
+            <el-input-number
+              v-model="tipData.points"
+              :min="0"
+              controls-position="right"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="8">
+          <el-form-item class="text" label="Lien vidéo Youtube">
+            <el-input class="el-input" v-model="tipData.videoLink"></el-input>
+          </el-form-item>
+        </el-col>
         <el-col :span="8">
           <el-form-item class="text" label="Description">
             <el-input
               class="el-input"
               type="textarea"
-              style="width:600px"
-              v-model="formData.desc"
+              v-model="tipData.description"
             ></el-input>
           </el-form-item>
         </el-col>
@@ -46,7 +58,9 @@
       <el-form-item class="valid">
         <el-row type="flex" class="row-bg" justify="center">
           <el-button @click="showModal = false">Annuler</el-button>
-          <el-button type="primary">Enregister</el-button>
+          <el-button @click="isEdit ? edit() : addTip()" type="primary"
+            >Enregister</el-button
+          >
         </el-row>
       </el-form-item>
     </el-form>
@@ -54,6 +68,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   components: {},
 
@@ -66,20 +81,45 @@ export default {
       default: false
     }
   },
+  mounted: function() {
+    this.isEdit ? (this.tipData = this.tip) : this.tipData;
+  },
+  updated: function() {
+    this.isEdit ? (this.tipData = this.tip) : this.tipData;
+  },
 
   data: function() {
     return {
       num: 1,
-      formData: {
+      tipData: {
         name: "",
-        desc: ""
+        type: "",
+        description: "",
+        active: true,
+        points: 100,
+        videoLink: ""
       },
-      showModal: false
+      showModal: this.visible
     };
   },
   methods: {
     open() {
       this.showModal = true;
+    },
+    edit() {
+      axios.patch(
+        `${window.config.api_root_url}rewards/update/${this.tip._id}`,
+        this.tipData
+      );
+      this.showModal = false;
+      setTimeout(this.$router.go(), 3000);
+    },
+    addTip() {
+      axios.post(`${window.config.api_root_url}rewards/add`, this.tipData);
+      this.showModal = false;
+    },
+    closeModal() {
+      this.showModal = false;
     }
   }
 };
