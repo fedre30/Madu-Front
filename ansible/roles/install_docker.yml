@@ -1,0 +1,4 @@
+---
+- hosts: myservers
+  roles:
+    - { role: install_docker, become: yes }

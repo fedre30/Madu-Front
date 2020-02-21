@@ -1,0 +1,2 @@
+[myservers]
+35.180.164.83 ansible_user=ubuntu

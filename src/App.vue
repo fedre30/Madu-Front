@@ -81,7 +81,5 @@ body {
   right: 0;
   background-color: #fafbfc;
   min-height: calc(100vh - 80px);
-  // margin-left: 200px;
-  // margin-top: 81px;
 }
 </style>
