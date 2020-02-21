@@ -63,7 +63,7 @@
           </el-row>
         </el-form></el-tab-pane
       >
-      <el-tab-pane label="Social" name="social" style="font-size: 2rem;">
+      <el-tab-pane label="Social" name="social">
         <h2 style="margin: 3rem 0 1.5rem 0">
           Social
           <i class="el-icon-user" style="margin-left: 0.5rem"></i>
@@ -263,7 +263,6 @@ export default {
         this.formData
       );
       this.showModal = false;
-      setTimeout(this.$router.go(), 2000);
     },
 
     closeModal() {
