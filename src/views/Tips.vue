@@ -211,11 +211,10 @@ export default {
   }
   .categorie {
     font-style: normal;
-    font-weight: bold;
     font-size: 15px;
     color: #000000;
     line-height: 18px;
-    text-transform: capitalize;
+    text-transform: uppercase;
   }
   .el-image {
     border-radius: 50%;
