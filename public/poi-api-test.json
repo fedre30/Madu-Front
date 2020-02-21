@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "name": "GIVEN",
+    "address": "89 rue de Bagnolet",
+    "zipcode": 75020,
+    "openingHours": "midi du mardi au vendredi, samedi 19-23h30",
+    "category": "Resto",
+    "type": "Healthy",
+    "price": "14,5€ menu",
+    "restrictions": "VEGAN FRIENDLY (VG)",
+    "glutenfree": "Option",
+    "organic": "En partie",
+    "accessibility": "",
+    "greenscore": ""
+  },
+  {
+    "id": 2,
+    "name": "ABATTOIR VEGETAL",
+    "address": "61 rue Ramey",
+    "zipcode": 75018,
+    "openingHours": "horaires divers",
+    "category": "Resto",
+    "type": "",
+    "price": "16,50-19€ menu",
+    "restrictions": "VEGAN",
+    "glutenfree": "",
+    "organic": "Full",
+    "accessibility": "",
+    "greenscore": ""
+  },
+  {
+    "id": 3,
+    "name": "LE MEZZE DU CHEF",
+    "address": "80 rue de Ménilmontant",
+    "zipcode": 75020,
+    "openingHours": "9h-minuit",
+    "category": "Resto",
+    "type": "Oriental",
+    "price": "10€ assiette mezze",
+    "restrictions": "VEGAN FRIENDLY (VG)",
+    "glutenfree": "OPTION",
+    "organic": "",
+    "accessibility": "",
+    "greenscore": ""
+  }
+]

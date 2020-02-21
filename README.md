@@ -1,0 +1,89 @@
+# Madu 
+### Frontoffice
+
+
+> 🍃 Welcome to Hetic W3 final project ! 🥕
+
+
+## Concept 🧐
+
+Madu is a Mobile app that lists on a map all eco-friendly adresses such as shops, resturants etc., in order to create more ethical and engaged consumers.
+
+## Brief 🤓
+
+Developing a Back-office whose feature are:
+
+* Dashboard for clients management (companies or schools)
+* Dashboad for POI management (restaurant, shops, etc.)
+* Map of existing POIs and clients.
+* Login
+
+## Stack choices
+
+### Why Vue.js?
+Vue.js is a very light Javascript framework that allows to easily build up to medium-size Apps.
+
+
+### Why Vuex?
+Vuex is useful for several reasons: firstly, when data needs to be passed between more than two components; secondly, when several sets of two components need the same data, but don't have a direct parent-child relationship, thirdly mutation debugging info and time travel in the browser.
+In our case, it has been very useful for login management.
+
+### Why Element?
+
+Element is a very large UI library, widely used among Vue.js community.
+We chose this library for the amount of available components, community support and documentation.
+
+### Why Leaflet?
+
+As this project aims a more eco-friendly life, we stated that Google Maps API was not a good choice as it is well known that Google API have a huge environmental print.
+So, we chose Leaflet over other APIs because it is widely used in Javascript-built applications and it is quite easy to set up.
+
+
+## Team 👩🏻‍💻 👨🏻‍💻
+
+* Quentin Aimé (Frontend Developer)
+* Federica Alfano (Frontend Developer)
+* Joel Pokam (Frontend Developer)
+
+
+## Project setup 🚀
+```
+yarn install
+```
+
+### Compiles and hot-reloads for development
+```
+yarn serve
+```
+
+### Compiles and minifies for production
+```
+yarn build
+```
+
+### Run your unit tests
+```
+yarn test:unit
+```
+
+### Lints and fixes files
+```
+yarn lint
+```
+
+
+### Libraries
+
+* Vue
+* vuex
+* [element-ui](https://element.eleme.io/#/fr-FR) 
+* vue-awesome
+* vue-router
+* [leaflet](https://leafletjs.com)
+* node-open-geocoder
+
+### Link
+
+TBT
+
+

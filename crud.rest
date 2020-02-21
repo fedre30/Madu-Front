@@ -1,0 +1,274 @@
+@host = 35.180.73.134
+@port = 3000
+@token = null
+@forfaitid  = 5e41d0764ea7e60e48a2e572
+@companiesid = 5e41e267ccc9ed27905ace3b
+@shopsid = 5e43131893ca7817fc58be2a
+@greenscoreid = 5e43a17ccfcac52e68437e83
+@userid = 5e45ed4d487935b3704ed41f
+
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTRiY2JlODc5ZTNlMGE4MzBlMWNmODEiLCJyb2xlIjoiYWRtaW4iLCJuYW1lIjoiTGUgTGllZ2FyZCIsImZpcnN0bmFtZSI6IkNocnlzdGFsIiwicGFzc3dvcmQiOiJzaGExJGRkNjA0OTM3JDEkM2QyNzYzOGUzNDU3ZmNjZWMxYTg2MGM2MmU3MzgyYjVlZjQ5MWE0ZCIsIm1haWxfcHJvIjoiY2hyeXN0YWwubGVsaWVnYXJkQG1hZHUubmV0IiwibGFzdExvZ2luIjoxNTgyMDI3MjUxOTQ3LCJpYXQiOjE1ODIwMjczMzl9.irVgjl2y48c0GY1SFjkkQ8PiweaNhlY5ZlpgqAJT3Ew
+
+
+
+GET http://{{host}}:{{port}}/forfait/
+Authorization: {{token}}
+
+###  FORFAIT ADD
+
+POST  http://{{host}}:{{port}}/forfait/add
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+    "endpoint" : "10/02/2020",
+    "mensual_price": 30,
+    "anual_price": 360,
+    "name": "Madu active +"
+}
+
+### FORFAIT UPDATE
+
+PATCH http://{{host}}:{{port}}/forfait/update/{{forfaitid}}
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+    "mensual_price": 15,
+    "anual_price": 175
+}
+
+### FORFAIT DELETE
+
+DELETE  http://{{host}}:{{port}}/forfait/delete/{{forfaitid}}
+Authorization: {{token}}
+
+
+
+
+############# COMPANIES ###############
+
+
+
+
+GET http://{{host}}:{{port}}/structures/
+Authorization: {{token}}
+### COMPANIES ADD
+
+POST http://{{host}}:{{port}}/structures/add
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+    "type": "school",
+    "name": "hetic",
+    "employees": "1300",
+    "address": "27 rue du progrès",
+    "zipcode": "93100",
+    "city": "Montreuil",
+    "particule": "hetic.net"
+}
+
+### COMPANIES UPDATE
+
+PATCH http://{{host}}:{{port}}/structures/update/{{companiesid}}
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+    "name": "esgi"
+}
+
+### COMPANIES DELETE
+
+DELETE http://{{host}}:{{port}}/structures/delete/{{companiesid}}
+Authorization: {{token}}
+
+
+
+
+############# SHOPS ###############
+
+
+
+GET http://{{host}}:{{port}}/shops/
+Authorization: {{token}}
+
+### SHOPS SELECT ONE ONLY
+GET http://{{host}}:{{port}}/shops/{{shopsid}}
+Authorization: {{token}}
+
+### SHOPS ADD
+
+POST http://{{host}}:{{port}}/shops/add
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+    "name": "Naturialit",
+    "description": "restaurant végétarien",
+    "type": "restaurant",
+    "address": "26 rue de montreuil",
+    "zipcode": "93100",
+    "city": "Montreuil",
+    "website": "https://www.google.com",
+    "tags": [
+        "bio",
+        "local",
+        "traditionnelle"
+    ], 
+    "greenscore": "20",
+    "accessibility": "true",
+    "price": "2"
+}
+
+###SHOPS UPDATE
+PATCH http://{{host}}:{{port}}/shops/update/{{shopsid}}
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+    "name": "rock'a billy"
+}
+
+### SHOPS DELETE
+DELETE http://{{host}}:{{port}}/shops/delete/{{shopsid}}
+Authorization: {{token}}
+
+
+
+
+############# Greenscore ###############
+
+
+### GET GREENSCORE
+
+GET http://{{host}}:{{port}}/greenscore/
+Authorization: {{token}}
+
+### GET GREENSCORE BY ID
+
+GET http://{{host}}:{{port}}/greenscore/{{{{greenscoreid}}}}
+Authorization: {{token}}
+
+### GREENSCORE ADD
+POST http://{{host}}:{{port}}/greenscore/add/{{shopsid}}
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+    "food": 
+    [
+        {
+            "criteria": "nourriture local",
+            "note": "70",
+            "coefficient":"2"
+        },
+        {
+            "criteria": "agriculture concernée",
+            "note":"61",
+            "coefficient":"1"
+        }
+    ],
+    "social":[
+        {
+            "criteria":"trajet du travail",
+            "note": "50",
+            "coefficient":"3"
+        },
+        {
+            "criteria":"salariés",
+            "note": "20",
+            "coefficient":"1"
+        }
+    ]
+}
+
+### GREENSCORE UPDATE
+
+PATCH http://{{host}}:{{port}}/greenscore/update/{{greenscoreid}}
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+     "food": 
+    [
+        {
+            "criteria": "nourriture local",
+            "note": "10",
+            "coefficient":"2"
+        },
+        {
+            "criteria": "agriculture concernée",
+            "note":"61",
+            "coefficient":"1"
+        }
+    ]   
+}
+
+### DELETE GREENSCORE
+
+DELETE http://{{host}}:{{port}}/greenscore/delete/{{greenscoreid}}
+Authorization: {{token}}
+
+
+
+
+############# Users ###############
+
+
+
+GET http://{{host}}:{{port}}/users/
+Authorization: {{token}}
+
+### USERS ADD
+
+POST http://{{host}}:{{port}}/users/add
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+    "role": "student",
+    "name": "da costa",
+    "firstname": "melanie",
+    "age": "21",
+    "password": "test",
+    "cagnotte": "0",
+    "lastLogin": "",
+    "job": "student",
+    "mail_pro": "melanie.dacosta@hetic.net",
+    "mail_perso": "rainald@gmail.com",
+    "avaibleShops": [],
+    "companies": [
+        {
+            "id": "5e4308b6f10f6e38a0137081",
+            "radius": "1",
+            "status": "actual"
+        }
+    ],
+    "visited_shops": [],
+    "interesting_points":[]
+}
+
+### USER UPDATE
+PATCH http://{{host}}:{{port}}/users/update/{{userid}}
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+    "password":"rainaldestvraimentgenial"
+}
+
+### DELETE USER
+DELETE http://{{host}}:{{port}}/users/delete/{{userid}}
+Authorization: {{token}}
+
+####### LOGIN #######
+
+POST http://{{host}}:{{port}}/login/
+Content-Type: application/json
+
+{
+    "mail_pro": "chrystal.leliegard@madu.net",
+    "password": "madu"
+}

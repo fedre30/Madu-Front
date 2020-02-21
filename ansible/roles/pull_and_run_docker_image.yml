@@ -1,0 +1,4 @@
+---
+- hosts: myservers
+  roles:
+    - { role: pull_and_run_docker_image, become: yes }

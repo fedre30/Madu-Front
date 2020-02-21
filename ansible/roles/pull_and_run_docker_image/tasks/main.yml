@@ -1,0 +1,15 @@
+---
+- name: Pull image from docker hub
+  docker_image:
+    name: "quentinaime/madu_app"
+    source: pull
+
+- name: Run docker image
+  docker_container:
+    name: "madu_app"
+    image: "quentinaime/madu_app"
+    state: started
+
+    restart: yes
+    ports:
+        - "8080:80"
