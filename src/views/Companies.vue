@@ -67,7 +67,7 @@ import { mapActions } from "vuex";
 export default {
   components: {
     ArchiveModal,
-    ClientModal,
+    ClientModal
   },
 
   data: function() {
@@ -125,7 +125,6 @@ export default {
       openGeocoder()
         .geocode(`${client.address}, ${client.zipCode} ${client.city}`)
         .end((err, res) => {
-          console.debug(res); // eslint-disable-line
           this.selectedClient = client;
           this.clientCoords = {
             lat: res[0].lat,

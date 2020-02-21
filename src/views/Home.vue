@@ -1,10 +1,17 @@
 <template>
   <div
     v-loading="loadingPos || loadingMarkersPOI || loadingMarkersCompanies"
-    class="home">
-    <el-radio-group v-model="showOptions" size="small" style="margin-bottom: 20px;">
+    class="home"
+  >
+    <el-radio-group
+      v-model="showOptions"
+      size="small"
+      style="margin-bottom: 20px;"
+    >
       <el-radio-button label="poi">Point d'intérêt</el-radio-button>
-      <el-radio-button label="both">Points d'intérêt et entreprises</el-radio-button>
+      <el-radio-button label="both"
+        >Points d'intérêt et entreprises</el-radio-button
+      >
       <el-radio-button label="companies">Entreprises</el-radio-button>
     </el-radio-group>
     <Map
@@ -36,7 +43,7 @@ export default {
       },
       mapData: [],
       mapDataAlt: [],
-      showOptions: 'poi',
+      showOptions: "poi",
       pois: [],
       companies: []
     };
@@ -100,7 +107,9 @@ export default {
       this.fetchData({ modelName: "structures" }).then(resp => {
         resp.data.forEach((structure, index) => {
           openGeocoder()
-            .geocode(`${structure.address}, ${structure.zipCode} ${structure.city}`)
+            .geocode(
+              `${structure.address}, ${structure.zipCode} ${structure.city}`
+            )
             .end((err, res) => {
               this.companies.push({
                 name: structure.name,

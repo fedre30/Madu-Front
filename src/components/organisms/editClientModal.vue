@@ -119,7 +119,6 @@ export default {
       this.editedClient.size = size;
     },
     open() {
-      console.debug('open'); // eslint-disable-line
       this.isOpen = true;
     },
     close() {

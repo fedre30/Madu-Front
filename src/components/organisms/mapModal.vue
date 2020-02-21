@@ -46,10 +46,6 @@ export default {
     }
   },
 
-  mounted: function() {
-    console.debug(this.selectedClient); // eslint-disable-line
-  },
-
   methods: {
     open() {
       this.showModal = true;
