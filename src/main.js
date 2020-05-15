@@ -18,7 +18,7 @@ Vue.use(ElementUI, {
 });
 // TODO insérer l'adresse de l'api ici
 window.config = {
-  api_root_url: "http://35.180.73.134:3000/"
+  api_root_url: "http://34.243.83.236:3000/"
 };
 Vue.prototype.$http = Axios;
 const token = localStorage.getItem("token");
