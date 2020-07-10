@@ -64,15 +64,12 @@ export default {
 
 <style lang="scss">
 .new-addresses {
-  padding: 0 2rem 2rem;
+  padding: 50px 70px;
   .view-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .title {
-      font-size: 21px;
-      font-family: "Lato Bold";
-    }
+    margin-bottom: 30px;
     .searchInput {
       width: 243px;
       margin-right: 36px !important;
@@ -103,6 +100,10 @@ export default {
     }
     td {
       border: none !important;
+    }
+    .header-cell {
+      text-transform: uppercase;
+      color: #b4bac6;
     }
   }
   .tab_1 {

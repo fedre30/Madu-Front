@@ -127,8 +127,6 @@ export default {
         let subScore = 0;
         let subCounter = 0;
         Object.keys(this.shop.greenscore[criteria.uid]).forEach(entry => {
-          console.debug(entry);//eslint-disable-line
-          console.debug(this.shop.greenscore[criteria.uid][entry]);//eslint-disable-line
           if (
             entry !== "value" &&
             this.shop.greenscore[criteria.uid][entry].isUsed
@@ -142,9 +140,6 @@ export default {
           }
         });
         if (subCounter > 0) {
-          console.debug(subScore);//eslint-disable-line
-          console.debug(subCounter);//eslint-disable-line
-
           this.shop.greenscore[criteria.uid].value = parseInt(
             subScore / subCounter
           );
@@ -226,7 +221,6 @@ export default {
             this.$notify.success({
               message: `Le nouveau critère ${value} a bien été créé`
             });
-            console.debug(res);//eslint-disable-line
             this.greenscoreCriterias.push(res);
             this.mainCriterias.forEach(criteria => {
               this.generateSubCriterias(criteria.uid);

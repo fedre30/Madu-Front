@@ -53,7 +53,6 @@ export default {
           return user;
         })
         .then(user => {
-          console.debug(user.data);//eslint-disable-line
           this.patchItem({
             item: user.data,
             model: "users"
@@ -72,7 +71,6 @@ export default {
             this.address.greenscore[criteria.uid] = { value: null };
           });
           this.address.greenscore.value = null;
-          console.debug(this.address); //eslint-disable-line
           this.createItem({
             item: this.address,
             model: "shops",
@@ -83,7 +81,6 @@ export default {
         });
     },
     deleteAddress() {
-      console.debug(this.address);//eslint-disable-line
       this.deleteItem({
         item: this.address,
         model: "newAddresses"

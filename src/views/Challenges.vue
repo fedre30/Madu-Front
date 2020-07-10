@@ -2,8 +2,8 @@
   <div class="challenges">
     <div class="view-header">
       <h1 class="title">Gestion des défis</h1>
-      <div style="margin-top: 15px;">
-        <el-button type="primary" @click="handleCreate()">
+      <div>
+        <el-button class="create-button" type="primary" @click="handleCreate()">
           Ajouter un nouveau défi
         </el-button>
       </div>
@@ -43,15 +43,16 @@
         <el-table-column label="Opérations" fixed="right" width="150">
           <template slot-scope="scope" size="mini">
             <el-button
-              class="btn"
               size="mini"
               type="default"
+              class="action-button"
               @click="handleEdit(scope.row)"
               >Editer</el-button
             >
             <el-button
               size="mini"
               type="danger"
+              class="delete-button"
               @click="handleDelete(scope.row)"
             >
               <i class="el-icon-delete"></i>
@@ -96,20 +97,26 @@ export default {
 
 <style lang="scss">
 .challenges {
-  padding: 0 2rem 2rem;
+  padding: 50px 70px;
   .view-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .title {
-      font-size: 21px;
-      font-family: "Lato Bold";
-    }
+    margin-bottom: 30px;
     .searchInput {
       width: 243px;
       margin-right: 36px !important;
     }
-
+    .create-button {
+      background-color: #364ec1;
+      color: #fafbfc;
+      border-color: #364ec1;
+      &:hover {
+        background-color: #364ec1;
+        color: #fafbfc;
+        border-color: #364ec1;
+      }
+    }
     .searchIcon {
       color: #fff;
       background-color: #409eff;
@@ -135,6 +142,28 @@ export default {
     }
     td {
       border: none !important;
+    }
+    .header-cell {
+      text-transform: uppercase;
+      color: #b4bac6;
+    }
+    .delete-button {
+      border-color: #ff6a62;
+      color: #ff6a62;
+      background-color: #fafbfc;
+      &:hover {
+        background-color: #ff6a62;
+        color: #fafbfc;
+      }
+    }
+    .action-button {
+      background-color: #fafbfc;
+      color: #364ec1;
+      border-color: #364ec1;
+      &:hover {
+        background-color: #364ec1;
+        color: #fafbfc;
+      }
     }
   }
   .tab_1 {

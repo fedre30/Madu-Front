@@ -29,7 +29,7 @@ export default {
   },
   data: function() {
     return {
-      loading: false,
+      loading: false
     };
   },
   mounted() {
@@ -78,7 +78,7 @@ export default {
 
 <style lang="scss" scoped>
 #map {
-  height: calc(100vh - 44px - 4rem); // window - title - padding
+  height: calc(100vh - 85px - 140px); // window - title - padding
   // height: 600px;
 }
 </style>

@@ -8,6 +8,7 @@
       v-model="showOptions"
       size="small"
       style="margin-bottom: 20px;"
+      class="radio-control"
     >
       <el-radio-button label="poi">Point d'intérêt</el-radio-button>
       <el-radio-button label="both"
@@ -27,7 +28,7 @@
 <script>
 import Map from "../components/atoms/Map";
 import openGeocoder from "node-open-geocoder";
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 export default {
   name: "home",
   components: {
@@ -71,7 +72,6 @@ export default {
     this.fetchMapData();
   },
   methods: {
-    ...mapActions(["fetchData"]),
     fetchMapData() {
       this.loadingPos = true;
       navigator.geolocation.getCurrentPosition(
@@ -102,27 +102,20 @@ export default {
       this.loadingMarkersPOI = false;
       this.mapData = this.pois;
       this.loadingMarkersCompanies = true;
-      this.fetchData({ modelName: "company" }).then(resp => {
-        if (resp.data.results.length === 0) {
-          this.loadingMarkersCompanies = false;
-        }
-        console.debug(resp); //eslint-disable-line
-        this.companies.forEach(structure => {
-          openGeocoder()
-            .geocode(
-              `${structure.address}, ${structure.zipCode} ${structure.city}`
-            )
-            .end((err, res) => {
-              this.mapCompanies.push({
-                name: structure.name,
-                coords: {
-                  latitude: res[0].lat,
-                  longitude: res[0].lon
-                }
-              });
+      this.companies.forEach(structure => {
+        openGeocoder()
+          .geocode(
+            `${structure.address}, ${structure.zipCode} ${structure.city}`
+          )
+          .end((err, res) => {
+            this.mapCompanies.push({
+              name: structure.name,
+              coords: {
+                latitude: res[0].lat,
+                longitude: res[0].lon
+              }
             });
-        });
-        this.loadingMarkersCompanies = false;
+          });
       });
     }
   }
@@ -131,7 +124,13 @@ export default {
 
 <style lang="scss">
 .home {
-  padding: 2rem;
-  min-height: 100vh;
+  padding: 50px 70px 70px;
+  height: calc(100vh - 140px); // - paddingTop - paddingBottom
+  .title {
+    margin-bottom: 25px;
+  }
+  .radio-control {
+    color: #364ec1;
+  }
 }
 </style>
