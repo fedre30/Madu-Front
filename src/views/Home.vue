@@ -3,6 +3,7 @@
     v-loading="loadingPos || loadingMarkersPOI || loadingMarkersCompanies"
     class="home"
   >
+    <h1 class="title">Carte</h1>
     <el-radio-group
       v-model="showOptions"
       size="small"
@@ -26,7 +27,7 @@
 <script>
 import Map from "../components/atoms/Map";
 import openGeocoder from "node-open-geocoder";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "home",
   components: {
@@ -45,7 +46,7 @@ export default {
       mapDataAlt: [],
       showOptions: "poi",
       pois: [],
-      companies: []
+      mapCompanies: []
     };
   },
   watch: {
@@ -56,11 +57,12 @@ export default {
         this.mapData = this.pois;
       }
       if (val === "companies" || val === "both") {
-        this.mapDataAlt = this.companies;
+        this.mapDataAlt = this.mapCompanies;
       }
     }
   },
   computed: {
+    ...mapGetters(["shops", "companies"]),
     keygen() {
       return `${this.coordinates.latitude}${this.coordinates.longitude}${this.mapData.length}${this.mapDataAlt.length}`;
     }
@@ -84,51 +86,43 @@ export default {
         }
       );
       this.loadingMarkersPOI = true;
-      this.fetchData({ modelName: "shops" }).then(resp => {
-        if (resp.data.length === 0) {
-          this.loadingMarkersPOI = false;
-        }
-        resp.data.forEach((poi, index) => {
-          openGeocoder()
-            .geocode(`${poi.adress}, ${poi.zipcode} ${poi.city}`)
-            .end((err, res) => {
-              this.pois.push({
-                name: poi.name,
-                coords: {
-                  latitude: res[0].lat,
-                  longitude: res[0].lon
-                }
-              });
-              if (index + 1 === resp.data.length) {
-                this.loadingMarkersPOI = false;
-                this.mapData = this.pois;
+      this.shops.forEach(poi => {
+        openGeocoder()
+          .geocode(`${poi.address}, ${poi.zipcode} ${poi.city}`)
+          .end((err, res) => {
+            this.pois.push({
+              name: poi.name,
+              coords: {
+                latitude: res[0].lat,
+                longitude: res[0].lon
               }
             });
-        });
+          });
       });
+      this.loadingMarkersPOI = false;
+      this.mapData = this.pois;
       this.loadingMarkersCompanies = true;
-      this.fetchData({ modelName: "structures" }).then(resp => {
-        if (resp.data.length === 0) {
+      this.fetchData({ modelName: "company" }).then(resp => {
+        if (resp.data.results.length === 0) {
           this.loadingMarkersCompanies = false;
         }
-        resp.data.forEach((structure, index) => {
+        console.debug(resp); //eslint-disable-line
+        this.companies.forEach(structure => {
           openGeocoder()
             .geocode(
               `${structure.address}, ${structure.zipCode} ${structure.city}`
             )
             .end((err, res) => {
-              this.companies.push({
+              this.mapCompanies.push({
                 name: structure.name,
                 coords: {
                   latitude: res[0].lat,
                   longitude: res[0].lon
                 }
               });
-              if (index + 1 === resp.data.length) {
-                this.loadingMarkersCompanies = false;
-              }
             });
         });
+        this.loadingMarkersCompanies = false;
       });
     }
   }
@@ -138,5 +132,6 @@ export default {
 <style lang="scss">
 .home {
   padding: 2rem;
+  min-height: 100vh;
 }
 </style>

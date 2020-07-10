@@ -2,9 +2,8 @@
   <div id="app">
     <login v-if="!this.$store.state.currentUser.authenticated"></login>
     <div v-else>
-      <Header></Header>
       <Sidebar></Sidebar>
-      <div class="main">
+      <div v-if="$store.getters.modelsLoaded" class="main">
         <router-view></router-view>
       </div>
     </div>
@@ -13,14 +12,12 @@
 
 <script>
 import Login from "./views/Login.vue";
-import Header from "./components/molecules/Header.vue";
 import Sidebar from "./components/organisms/Sidebar.vue";
 import { mapGetters } from "vuex";
 
 export default {
   components: {
     Login,
-    Header,
     Sidebar
   },
   created() {
@@ -74,10 +71,9 @@ body {
 .main {
   position: absolute;
   z-index: 1;
-  top: 80px;
   left: 75px;
   right: 0;
   background-color: #fafbfc;
-  min-height: calc(100vh - 80px);
+  min-height: 100vh;
 }
 </style>

@@ -5,6 +5,28 @@
     width="70%"
     @close="closeModal"
   >
+    <el-dialog
+      title="Liste des tags"
+      :visible.sync="showTagModal"
+      width="70%"
+      append-to-body
+    >
+      <el-row :gutter="0">
+        <el-col :span="8">
+          <div>Nom</div>
+        </el-col>
+        <el-col :span="6">
+          Tag principal
+        </el-col>
+        <el-col :span="6">
+          Image
+        </el-col>
+      </el-row>
+      <tag v-for="tag in tags" :key="tag.uid" :tag="tag"></tag>
+      <span slot="footer">
+        <el-button @click="showTagModal = false">Fermer</el-button>
+      </span>
+    </el-dialog>
     <h2>{{ isEdit ? "Modifier" : "Ajouter" }} un commerçant</h2>
     <el-form :model="formData">
       <el-row :gutter="20" style="margin: 1rem 0">
@@ -15,17 +37,19 @@
         </el-col>
       </el-row>
       <el-row :gutter="20" style="margin: 1rem 0">
-        <el-col :span="12">
+        <el-col :span="24">
           <el-form-item label="ADRESSE" class="label-style">
-            <el-input v-model="formData.adress"></el-input>
+            <el-input v-model="formData.address"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+      </el-row>
+      <el-row :gutter="20" style="margin: 1rem 0">
+        <el-col :span="12">
           <el-form-item label="CODE POSTAL" class="label-style">
             <el-input v-model="formData.zipcode"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="12">
           <el-form-item label="VILLE" class="label-style">
             <el-input v-model="formData.city"></el-input>
           </el-form-item>
@@ -33,28 +57,38 @@
       </el-row>
       <el-row :gutter="20" style="margin: 1rem 0">
         <el-col :span="24">
-          <el-form-item
-            label="TAGS (séparés par des virgules)"
-            class="label-style"
-          >
-            <el-input v-model="formData.tags"></el-input>
+          <el-form-item label="TAGS" class="label-style">
+            <el-select v-model="formData.tags_uid" placeholder="tags" multiple>
+              <el-option
+                v-for="item in tags"
+                :key="item.uid"
+                :label="item.name"
+                :value="item.uid"
+              ></el-option>
+            </el-select>
           </el-form-item>
+          <el-button type="primary" @click="showTagModal = true">
+            Voir les tags
+          </el-button>
         </el-col>
       </el-row>
       <el-row :gutter="20" style="margin: 1rem 0">
-        <el-col :span="6" style="display: flex; flex-direction: column;">
+        <el-col :span="12" style="display: flex; flex-direction: column;">
           <el-form-item label="TYPE" class="label-style">
             <el-select
-              v-model="formData.type"
+              v-model="formData.type_uid"
               placeholder="Selectionner un type"
             >
-              <el-option label="Restaurant" value="restaurant"></el-option>
-              <el-option label="Boutique" value="shop"></el-option>
-              <el-option label="Activité" value="activity"></el-option>
+              <el-option
+                v-for="item in typesOfShops"
+                :key="item.uid"
+                :label="item.name"
+                :value="item.uid"
+              ></el-option>
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="12">
           <el-form-item label="ACCES AU FAUTEUIL ROULANT" class="label-style">
             <el-radio v-model="formData.accessibility" label="true" border
               >Oui</el-radio
@@ -66,7 +100,7 @@
         </el-col>
       </el-row>
       <el-row :gutter="20" style="margin: 1rem 0">
-        <el-col :span="6">
+        <el-col :span="24">
           <el-form-item label="PRIX" class="label-style">
             <div>
               <i
@@ -94,10 +128,22 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row style="margin: 2rem 0" v-if="this.shop && this.shop.greenscore">
-        <el-button type="success" @click="editGreenscore()"
-          >Modifier Greenscore</el-button
-        >
+      <el-row :gutter="20" style="margin: 1rem 0">
+        <el-col :span="24">
+          <el-form-item label="IMAGE" class="label-style">
+            <el-upload
+              class="avatar-uploader"
+              action=""
+              ref="upload"
+              :show-file-list="false"
+              :on-change="handleAvatarChange"
+              :auto-upload="false"
+            >
+              <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </el-form-item>
+        </el-col>
       </el-row>
       <el-row>
         <el-button type="primary" @click="isEdit ? edit() : addShop()"
@@ -106,82 +152,135 @@
         <el-button @click="showModal = false">Annuler</el-button>
       </el-row>
     </el-form>
-    <poi-greenscore-modal
-      :shop="shop"
-      :visible="showGreenscoreEdit"
-      ref="editGreenscoreModal"
-      isEdit
-    />
   </el-dialog>
 </template>
 
 <script>
+import Tag from "../atoms/Tag";
+import { mapGetters, mapActions } from "vuex";
 import axios from "axios";
-import PoiGreenscoreModal from "../poi/poiGreenscoreModal";
 export default {
   components: {
-    PoiGreenscoreModal
+    Tag
   },
-
   props: {
-    shop: {
-      type: Object
-    },
     isEdit: {
       type: Boolean,
       default: false
-    },
-    visible: {
-      type: Boolean
     }
   },
 
   data: function() {
     return {
+      imageUrl: "",
+      shop: {},
+      showModal: false,
+      showTagModal: false,
       formData: {
         name: "",
-        type: "",
-        adress: "",
+        type_uid: "",
+        address: "",
         zipcode: "",
         city: "",
-        tags: "",
-        accessibility: "",
+        tags_uid: [],
+        accessibility: true,
         price: 1,
-        description: ""
+        description: "",
+        greenscore: {}
       },
-
-      showModal: this.visible,
       showGreenscoreEdit: false
     };
   },
 
-  mounted: function() {
-    this.isEdit ? (this.formData = this.shop) : this.formData;
-    if (this.isEdit) {
-      this.formData.tags = this.formData.tags.join(", ");
-    }
-  },
-
-  updated: function() {
-    this.isEdit ? (this.formData = this.shop) : this.formData;
+  computed: {
+    ...mapGetters(["tags", "typesOfShops", "greenscoreCriteriasByUid"])
   },
 
   methods: {
-    open() {
+    ...mapActions(["patchItem", "createItem"]),
+    handleAvatarChange(file) {
+      let self = this;
+      let reader = new FileReader();
+      reader.onload = function() {
+        let img = new Image();
+        self.showImgError = false;
+        img.onload = function() {
+          self.imageUrl = URL.createObjectURL(file.raw);
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file.raw);
+    },
+    open(shop) {
+      console.debug(shop); //eslint-disable-line
+      this.$set(this, "shop", shop);
+      if (shop.uid) {
+        this.$set(this, "formData", JSON.parse(JSON.stringify(this.shop)));
+        console.debug(this.shop); //eslint-disable-line
+        this.$set(this, "imageUrl", this.shop.image);
+      } else {
+        this.imageUrl = "";
+        this.formData = {
+          name: "",
+          type_uid: "",
+          address: "",
+          zipcode: "",
+          city: "",
+          tags_uid: [],
+          accessibility: true,
+          price: 1,
+          description: "",
+          greenscore: {}
+        };
+        console.debug(this.typesOfShops);//eslint-disable-line
+        let typeOfShop = this.typesOfShops.find(
+          type => type.name.toLowerCase() === "alimentaire"
+        );
+        if (typeOfShop) {
+          let mainCriterias = typeOfShop.criterias.map(criteriaUid => {
+            console.debug(criteriaUid);//eslint-disable-line
+            if (this.$store.state["greenscoreCriterias"]) {
+              return this.greenscoreCriteriasByUid(criteriaUid);
+            } else {
+              return {};
+            }
+          });
+          console.debug(mainCriterias); //eslint-disable-line
+          mainCriterias.forEach(criteria => {
+            this.formData.greenscore[criteria.uid] = { value: null };
+          });
+          this.formData.greenscore.value = null;
+        }
+      }
       this.showModal = true;
     },
     successCallback() {
       this.$emit("successCallback");
     },
     edit() {
-      this.formData.tags = this.formData.tags
-        ? this.formData.tags.split(", ")
-        : null;
-      axios.patch(
-        `${window.config.api_root_url}shops/update/${this.shop._id}`,
-        this.formData
-      );
-      // setTimeout(this.$router.go(), 3000);
+      delete this.formData.image;
+      this.patchItem({
+        item: this.formData,
+        model: "shops"
+      }).then(async res => {
+        let formData = new FormData();
+        if (this.$refs.upload.$data.uploadFiles[0]) {
+          formData.append("image", this.$refs.upload.$data.uploadFiles[0].raw);
+        }
+        return await axios
+          .patch(res.url, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+          })
+          .then(res => {
+            this.$store.dispatch("fetchModelByName", "shops");
+            return res;
+          })
+          .catch(error => {
+            throw error;
+          });
+      });
       this.showModal = false;
     },
 
@@ -193,11 +292,30 @@ export default {
       }
     },
     addShop() {
-      this.formData.tags = this.formData.tags
-        ? this.formData.tags.split(", ")
-        : null;
-      axios.post(`${window.config.api_root_url}shops/add`, this.formData);
-      //setTimeout(this.$router.go(), 5000);
+      delete this.formData.image;
+      this.createItem({
+        item: this.formData,
+        model: "shops",
+        url: this.$store.state.metaDefinition.listModels.shops.url
+      }).then(async res => {
+        let formData = new FormData();
+        if (this.$refs.upload.$data.uploadFiles[0]) {
+          formData.append("image", this.$refs.upload.$data.uploadFiles[0].raw);
+        }
+        return await axios
+          .patch(res.url, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+          })
+          .then(res => {
+            this.$store.dispatch("fetchModelByName", "shops");
+            return res;
+          })
+          .catch(error => {
+            throw error;
+          });
+      });
       this.showModal = false;
     },
     closeModal() {
@@ -219,6 +337,9 @@ export default {
   }
 }
 
+.avatar {
+  width: 100%;
+}
 .greenscore-icon {
   width: 100%;
   display: flex;

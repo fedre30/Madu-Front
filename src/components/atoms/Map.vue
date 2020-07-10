@@ -28,7 +28,9 @@ export default {
     }
   },
   data: function() {
-    return {};
+    return {
+      loading: false,
+    };
   },
   mounted() {
     this.loading = true;
@@ -69,13 +71,14 @@ export default {
         .bindPopup(structure.name)
         .openPopup();
     });
+    this.loading = false;
   }
 };
 </script>
 
 <style lang="scss" scoped>
 #map {
-  height: calc(100vh - 81px - 44px - 4rem); // window - header - title - padding
+  height: calc(100vh - 44px - 4rem); // window - title - padding
   // height: 600px;
 }
 </style>

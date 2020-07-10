@@ -15,37 +15,24 @@
 </template>
 
 <script>
-import axios from "axios";
 export default {
-  components: {},
-
-  props: {
-    shop: {
-      type: Object,
-      default: () => {
-        return {};
-      }
-    }
-  },
-
   data: function() {
     return {
-      showModal: false
+      showModal: false,
+      shop: {}
     };
   },
 
-  computed: {},
-
-  mounted: function() {},
-
   methods: {
-    open() {
+    open(shop) {
+      this.shop = shop;
       this.showModal = true;
     },
     deleteShop() {
-      axios.delete(
-        `${window.config.api_root_url}shops/delete/${this.shop._id}`
-      );
+      this.$store.dispatch("deleteItem", {
+        item: this.shop,
+        model: "shops"
+      });
       this.showModal = false;
     }
   }
