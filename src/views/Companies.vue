@@ -3,9 +3,13 @@
     <div class="view-header">
       <h1 class="title">Gestion des entreprises</h1>
       <div class="actions">
-        <el-button type="primary" class="create-button" @click="openCreationModal"
-          >Ajouter une entreprise</el-button
+        <el-button
+          type="primary"
+          class="create-button"
+          @click="openCreationModal"
         >
+          Ajouter une entreprise
+        </el-button>
       </div>
     </div>
     <div>
