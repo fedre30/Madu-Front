@@ -2,18 +2,22 @@
   <div class="view-container">
     <div class="login">
       <div class="form-container">
+        <img src="../static/img/Madu_Logo.png" />
         <h1>Connectez-vous</h1>
         <el-form class="form" label-position="top" @submit="login">
-          <el-form-item label="Identifiant">
-            <el-input v-model="mail_pro" placeholder="Identifiant"></el-input>
+          <el-form-item class="email" label="Identifiant">
+            <el-input v-model="email" placeholder="Identifiant"></el-input>
           </el-form-item>
-          <el-form-item label="Mot de passe">
+          <el-form-item class="password" label="Mot de passe">
             <el-input
               type="password"
               v-model="password"
               placeholder="Mot de passe"
             ></el-input>
           </el-form-item>
+          <div class="error" v-show="error">
+            Les identifiants ne sont pas valides.
+          </div>
           <el-form-item>
             <button type="submit" @click="login" class="btn-submit">
               Se connecter
@@ -34,18 +38,35 @@ export default {
 
   data: function() {
     return {
-      mail_pro: "",
-      password: ""
+      email: "",
+      password: "",
+      error: false
     };
+  },
+
+  watch: {
+    email() {
+      if (this.error) {
+        this.error = false;
+      }
+    },
+    password() {
+      if (this.error) {
+        this.error = false;
+      }
+    }
   },
 
   methods: {
     login(event) {
       event.preventDefault();
       this.$store
-        .dispatch("login", { mail_pro: this.mail_pro, password: this.password })
+        .dispatch("login", { email: this.email, password: this.password })
         .then(() => this.$router.push({ name: "home" }))
-        .catch(err => console.log(err)); // eslint-disable-line
+        .catch(err => {
+          console.log(err) // eslint-disable-line
+          this.error = true;
+        });
     }
   }
 };
@@ -55,7 +76,7 @@ export default {
 .view-container {
   height: 100vh;
   width: 100vw;
-  background-color: #fafbfc;
+  background-color: #738bff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -66,28 +87,45 @@ export default {
     .form-container {
       width: 100%;
       background: #ffffff;
-      padding-top: 45px;
+      padding: 50px 0;
+      h1 {
+        text-transform: uppercase;
+        font-family: "Lato Bold";
+        font-size: 30px;
+        line-height: 36px;
+        color: #364ec1;
+        margin: 63px 0;
+      }
     }
     .form {
       position: relative;
       z-index: 1;
-      padding: 45px;
+      padding: 0 45px;
       text-align: left;
       margin: auto;
       width: 305px;
       .email,
       .password {
         margin: 0 auto;
-        .label {
+        .el-form-item__label {
+          margin: 0;
           text-transform: uppercase;
-          font-size: 14px;
-          margin-bottom: 10px;
+          font-size: 14.45px;
+          line-height: 17px;
+          letter-spacing: 1.50px;
+          color: #364ec1;
         }
       }
-      h1 {
-        text-transform: uppercase;
-        font-family: "Lato Bold";
-        color: #000d33;
+      .email {
+        margin-bottom: 35px;
+      }
+      .error {
+        position: absolute;
+        bottom: 85px;
+        font-size: 13px;
+        line-height: 16px;
+        color: #ff6a62;
+        letter-spacing: 0.10px;
       }
       input {
         background: transparent;
@@ -98,14 +136,13 @@ export default {
         border-radius: 4px;
       }
       button {
+        display: block;
         border-radius: 4px;
-        font-family: "Roboto", sans-serif;
-        text-transform: uppercase;
         outline: 0;
-        background: #0077ff;
+        background: #364ec1;
         width: 200px;
         border: 0;
-        margin-top: 60px;
+        margin: 60px auto 0;
         padding: 15px;
         color: #ffffff;
         font-size: 14px;
@@ -115,7 +152,7 @@ export default {
       }
       button:hover,
       button:focus {
-        background: #076ee4;
+        background: #738bff;
       }
       p {
         margin: 15px 0 0;

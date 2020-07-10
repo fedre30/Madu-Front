@@ -1,7 +1,7 @@
 <template>
-  <div class="">
+  <div class="client-modal">
     <el-dialog
-      :title="client.name || 'Ajouter une entreprise'"
+      :title="Object.keys(client).length > 0 ? 'Editer une entreprise' : 'Ajouter une entreprise'"
       :visible.sync="isOpen"
       width="60%"
       append-to-body
@@ -25,7 +25,7 @@
         <el-col :span="12">
           <p class="label">Code postal</p>
           <el-input
-            v-model="editedClient.zipCode"
+            v-model="editedClient.zipcode"
             placeholder="zip code de l'adresse"
           ></el-input>
         </el-col>
@@ -39,15 +39,15 @@
         <el-col :span="12">
           <div class="taille">
             <p class="label">Taille:</p>
-            <div class="buttons-container">
-              <el-button
-                v-for="size in sizeAvailables"
-                :key="size"
-                type="text"
-                @click="setClientSize(size)"
-                >{{ size }}</el-button
+            <el-select v-model="editedClient.size">
+              <el-option
+                v-for="item in sizeAvailables"
+                :key="item"
+                :label="item"
+                :value="item"
               >
-            </div>
+              </el-option>
+            </el-select>
           </div>
         </el-col>
         <el-col :span="12">
@@ -64,9 +64,38 @@
             </el-select>
           </div>
         </el-col>
-        <el-col :span="24">
-          <p class="label">Nb d'utilisateurs:</p>
-          <el-input v-model="editedClient.user" disabled></el-input>
+        <el-col :span="12">
+          <div class="type">
+            <p class="label">Nom de domaine de l'email:</p>
+            <el-input
+              v-model="editedClient.mail_affix"
+              placeholder="entreprise.com"
+            ></el-input>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="type">
+            <p class="label">Visibilité</p>
+            <el-checkbox v-model="editedClient.show_other_companies" label="Peux voir les résultats des autres entreprises"></el-checkbox>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <p class="label">Début de forfait</p>
+          <el-date-picker
+            v-model="editedClient.bundle_start_date"
+            type="date"
+            :value-format="'yyyy-MM-DD'"
+            placeholder="Choisir un jour"
+          ></el-date-picker>
+        </el-col>
+        <el-col :span="12">
+          <p class="label">Fin de forfait</p>
+          <el-date-picker
+            v-model="editedClient.bundle_end_date"
+            type="date"
+            :value-format="'yyyy-MM-DD'"
+            placeholder="Choisir un jour"
+          ></el-date-picker>
         </el-col>
       </el-row>
       <span slot="footer">
@@ -126,11 +155,12 @@ export default {
   },
 
   mounted: function() {
+    console.debug(this.client); //eslint-disable-line
     this.editedClient = JSON.parse(JSON.stringify(this.client));
   },
 
   methods: {
-    ...mapActions(["postData", "patchData"]),
+    ...mapActions(["createItem", "updateItem"]),
     setClientSize(size) {
       this.editedClient.size = size;
     },
@@ -141,16 +171,16 @@ export default {
       this.isOpen = false;
     },
     validate() {
-      if (this.client._id) {
-        this.patchData({
-          modelName: "structures",
-          objectId: this.client._id,
-          data: this.editedClient
+      if (this.client.uid) {
+        this.updateItem({
+          item: this.editedClient,
+          model: "companies"
         });
       } else {
-        this.postData({
-          modelName: "structures",
-          data: this.editedClient
+        this.createItem({
+          item: this.editedClient,
+          model: "companies",
+          url: this.$store.state.metaDefinition.listModels.companies.url
         });
       }
       this.close();
@@ -159,4 +189,7 @@ export default {
 };
 </script>
 
-<style lang="scss" module></style>
+<style lang="scss">
+.client-modal {
+}
+</style>

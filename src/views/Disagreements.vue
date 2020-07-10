@@ -1,38 +1,55 @@
 <template>
-  <div class="companies">
+  <div class="disagreements">
     <div class="view-header">
-      <h1 class="title">Gestion des récompenses</h1>
-      <div style="margin-top: 15px;">
-        <el-button type="primary" @click="addReward()"
-          >Ajouter une récompense</el-button
-        >
-      </div>
+      <h1 class="title">Gestion des avis</h1>
     </div>
     <template>
       <el-table
         header-cell-class-name="header-cell"
         class="el-table"
-        :data="rewards"
+        :data="userDisagreements"
         style="width: 100%"
       >
-        <el-table-column label="Titre" prop="name"></el-table-column>
-        <el-table-column label="Sous titre" prop="subtitle"></el-table-column>
-        <el-table-column label="Points">
+        <el-table-column label="Utilisateur">
           <template slot-scope="scope">
-            <span style="margin-right: 10px">
-              {{ scope.row.leaves_amount }}
-            </span>
+            <div>
+              {{
+                usersByUid(scope.row.user_uid)
+                  ? usersByUid(scope.row.user_uid).email
+                  : ""
+              }}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="Commercant">
+          <template slot-scope="scope">
+            <div>
+              {{
+                shopsByUid(scope.row.shop_uid)
+                  ? shopsByUid(scope.row.shop_uid).name
+                  : ""
+              }}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="Tags non appropriés">
+          <template slot-scope="scope">
+            <div
+              style="margin-right: 10px"
+              v-for="(tag, index) in scope.row.tags_uid"
+              :key="index"
+            >
+              #{{ tagsByUid(tag) ? tagsByUid(tag).name : "" }}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="éco-responsable">
+          <template slot-scope="scope">
+            <div>{{ scope.row.is_eco ? "Oui" : "Non" }}</div>
           </template>
         </el-table-column>
         <el-table-column label="Opérations">
           <template slot-scope="scope" size="mini">
-            <el-button
-              class="btn"
-              size="mini"
-              type="default"
-              @click="handleEdit(scope.row)"
-              >Éditer</el-button
-            >
             <el-button
               size="mini"
               type="danger"
@@ -44,42 +61,53 @@
         </el-table-column>
       </el-table>
     </template>
-    <tips-modal ref="editTipsModal" isEdit />
-    <tips-modal ref="addTipsModal" />
-    <delete-tips-modal ref="deleteTipModal" />
+    <new-address-modal ref="validateModal" isValidation />
+    <new-address-modal ref="deleteModal" />
   </div>
 </template>
 
 <script>
-import TipsModal from "../components/molecules/TipsModal";
-import DeleteTipsModal from "../components/molecules/deleteTipsModal";
+import NewAddressModal from "../components/molecules/NewAddressModal";
 import { mapGetters } from "vuex";
 export default {
   components: {
-    TipsModal,
-    DeleteTipsModal
+    NewAddressModal
   },
 
   computed: {
-    ...mapGetters(["rewards"])
+    ...mapGetters([
+      "userDisagreements",
+      "usersByUid",
+      "shopsByUid",
+      "tagsByUid"
+    ])
   },
 
   methods: {
-    handleEdit(reward) {
-      this.$refs.editTipsModal.open(reward);
+    handleValidate(address) {
+      this.$refs.validateModal.open(address);
     },
-    handleDelete(reward) {
-      this.$refs.deleteTipModal.open(reward);
-    },
-    addReward() {
-      this.$refs.addTipsModal.open({});
+    handleDelete(disagreement) {
+      this.$confirm(
+        "Êtes-vous sur de vouloir supprimer cet avis ?",
+        "Suppression",
+        {
+          confirmButtonText: "Supprimer",
+          cancelButtonText: "Cancel"
+        }
+      ).then(() => {
+        this.$store.dispatch("deleteItem", {
+          item: disagreement,
+          model: "userDisagreements"
+        });
+      });
     }
   }
 };
 </script>
 
 <style lang="scss">
-.companies {
+.disagreements {
   padding: 0 2rem 2rem;
   .view-header {
     display: flex;

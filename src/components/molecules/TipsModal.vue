@@ -6,19 +6,26 @@
     @close="showModal = false"
   >
     <h2 class="title">{{ isEdit ? "Modifier" : "Ajouter" }} une récompense</h2>
-    <el-form :model="tipData">
+    <el-form :model="rewardData">
       <el-row :gutter="20">
-        <el-col :span="8">
+        <el-col :span="12">
           <el-form-item class="text" label="Nom de la récompense">
-            <el-input v-model="tipData.name"></el-input>
+            <el-input v-model="rewardData.name"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="8">
+        <el-col :span="12">
+          <el-form-item class="text" label="Sous titre de la récompense">
+            <el-input v-model="rewardData.subtitle"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
           <el-form-item class="text" label="Nombre de points demandés">
             <el-input-number
-              v-model="tipData.points"
+              v-model="rewardData.leaves_amount"
               :min="0"
               controls-position="right"
             ></el-input-number>
@@ -26,34 +33,15 @@
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="8">
-          <el-form-item class="text" label="Lien vidéo Youtube">
-            <el-input class="el-input" v-model="tipData.videoLink"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
+        <el-col :span="24">
           <el-form-item class="text" label="Description">
             <el-input
               class="el-input"
               type="textarea"
-              v-model="tipData.description"
+              v-model="rewardData.description"
             ></el-input>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-upload
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :file-list="fileList"
-          list-type="picture"
-        >
-          <el-button class="btn" style="" size="small" type="default">
-            <i class="el-icon-paperclip" /> Ajouter une photo</el-button
-          >
-        </el-upload>
       </el-row>
       <el-form-item class="valid">
         <el-row type="flex" class="row-bg" justify="center">
@@ -68,54 +56,56 @@
 </template>
 
 <script>
-import axios from "axios";
+import { mapActions } from "vuex";
 export default {
   components: {},
 
   props: {
-    tip: {
-      type: Object
-    },
     isEdit: {
       type: Boolean,
       default: false
     }
   },
-  mounted: function() {
-    this.isEdit ? (this.tipData = this.tip) : this.tipData;
-  },
-  updated: function() {
-    this.isEdit ? (this.tipData = this.tip) : this.tipData;
-  },
 
   data: function() {
     return {
-      num: 1,
-      tipData: {
+      rewardData: {
         name: "",
-        type: "",
+        subtitle: "",
         description: "",
-        active: true,
-        points: 100,
-        videoLink: ""
+        leaves_amount: 100
       },
-      showModal: this.visible
+      showModal: false
     };
   },
   methods: {
-    open() {
+    ...mapActions(["createItem", "updateItem"]),
+    open(reward) {
+      if (this.isEdit) {
+        this.rewardData = reward;
+      } else {
+        this.rewardData = {
+          name: "",
+          subtitle: "",
+          description: "",
+          points: 100
+        };
+      }
       this.showModal = true;
     },
     edit() {
-      axios.patch(
-        `${window.config.api_root_url}rewards/update/${this.tip._id}`,
-        this.tipData
-      );
+      this.updateItem({
+        item: this.rewardData,
+        model: "rewards"
+      });
       this.showModal = false;
-      setTimeout(this.$router.go(), 3000);
     },
     addTip() {
-      axios.post(`${window.config.api_root_url}rewards/add`, this.tipData);
+      this.createItem({
+        item: this.rewardData,
+        model: "rewards",
+        url: this.$store.state.metaDefinition.listModels.rewards.url
+      });
       this.showModal = false;
     },
     closeModal() {

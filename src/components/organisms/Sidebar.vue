@@ -1,19 +1,25 @@
 <template>
   <div class="sidebar">
-    <sidebar-entry
-      v-for="entry in sidebarEntries"
-      :key="entry.name"
-      :name="entry.name"
-      :linkName="entry.link"
-      :icon="entry.icon"
-      :tooltip="entry.tooltip"
-    ></sidebar-entry>
+    <img src="../../static/img/Madu_Logo_white.png" />
+    <div class="entries">
+      <sidebar-entry
+        v-for="entry in sidebarEntries"
+        :key="entry.name"
+        :linkName="entry.link"
+        :imageName="entry.imageName"
+        :tooltip="entry.tooltip"
+      ></sidebar-entry>
+    </div>
+    <el-button class="logout-button" @click="logout">
+      <img src="../../static/img/logout_white.png" />
+    </el-button>
     <div class="version">{{ version }}</div>
   </div>
 </template>
 
 <script>
 import SidebarEntry from "./../molecules/SidebarEntry.vue";
+import { mapActions } from "vuex";
 
 /*global VERSION:true*/
 
@@ -26,25 +32,38 @@ export default {
       sidebarEntries: [
         {
           link: "home",
-          icon: "el-icon-house",
+          imageName: "map",
           tooltip: "Home"
         },
         {
           link: "company-list",
-          icon: "el-icon-office-building",
+          imageName: "company",
           tooltip: "Entreprises"
         },
         {
-          name: "shops",
           link: "shops",
-          icon: "el-icon-shopping-bag-1",
+          imageName: "shop",
           tooltip: "POI"
         },
         {
-          name: "tips",
+          link: "challenges",
+          imageName: "leaf",
+          tooltip: "Challenges"
+        },
+        {
           link: "tips",
-          icon: "el-icon-trophy-1",
+          imageName: "tips",
           tooltip: "Récompenses"
+        },
+        {
+          link: "new-addresses",
+          imageName: "address",
+          tooltip: "Nouvelles adresses"
+        },
+        {
+          link: "disagreements",
+          imageName: "dislike",
+          tooltip: "Avis utilisateur"
         }
       ]
     };
@@ -58,6 +77,9 @@ export default {
         return "";
       }
     }
+  },
+  methods: {
+    ...mapActions(["logout"])
   }
 };
 </script>
@@ -70,17 +92,37 @@ export default {
   left: 0;
   top: 0;
   bottom: 0;
-  background-color: white;
+  background-color: #738bff;
   border-right: 1px solid #ebedf8;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 20% 0;
+  padding: 25px 0;
   flex-direction: column;
+  .entries {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    // justify-content: space-between;
+    flex-direction: column;
+    padding-top: 60px;
+    width: 100%;
+  }
   .version {
     position: absolute;
     bottom: 15px;
     left: 10px;
+  }
+  .logout-button {
+    background-color: #364ec1;
+    border: none;
+    margin-bottom: 30px;
+    padding: 15px;
+    width: 55px;
+    height: 55px;
+    &:hover,
+    &:focus {
+      background-color: #364ec1;
+    }
   }
 }
 </style>

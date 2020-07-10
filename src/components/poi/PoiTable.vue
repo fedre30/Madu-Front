@@ -1,73 +1,81 @@
 <template>
   <div class="container">
-    <div class="button-container">
-      <el-row justify="end" style="margin-bottom: 2rem">
-        <el-button class="btn" type="primary" @click="addShop()"
-          >Ajouter un commerçant</el-button
-        >
-      </el-row>
-    </div>
+    <el-row
+      justify="end"
+      style="display: flex; margin-bottom: 2rem; align-items: center;"
+    >
+      <h1>Gestion des commerçants</h1>
+      <el-button class="btn" type="primary" @click="addShop()"
+        >Ajouter un commerçant</el-button
+      >
+    </el-row>
     <template>
-      <el-table :data="dataTable" style="width: 100%">
-        <el-table-column label="Nom" sortable>
+      <el-table :data="shops" style="width: 100%">
+        <el-table-column label="Nom" prop="name" width="180"></el-table-column>
+        <el-table-column label="Type" width="180">
           <template slot-scope="scope">
-            <b>{{ scope.row.name }}</b>
+            <span style="margin-right: 10px">
+              {{
+                typesOfShopsByUid(scope.row.type)
+                  ? typesOfShopsByUid(scope.row.type).name
+                  : ""
+              }}
+            </span>
           </template>
         </el-table-column>
-        <el-table-column label="Type" width="180" sortable>
-          <el-progress type="circle" :percentage="25"></el-progress>
+        <el-table-column label="Tags" width="300">
           <template slot-scope="scope">
-            <span style="margin-right: 10px">{{ scope.row.type }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="Tags">
-          <template slot-scope="scope">
-            <span
+            <div
               style="margin-right: 10px"
               v-for="(tag, index) in scope.row.tags"
               :key="index"
-              >#{{ tag }}</span
             >
+              #{{ tagsByUid(tag) ? tagsByUid(tag).name : "" }}
+            </div>
           </template>
         </el-table-column>
-        <el-table-column label="Greenscore" width="150">
+        <el-table-column label="Greenscore" width="180">
           <template slot-scope="scope">
-            <greenscore-value :greenscoreId="scope.row.greenscore" />
+            <greenscore-value :relatedShop="scope.row" />
           </template>
         </el-table-column>
-        <el-table-column label="Localisation" width="300">
+        <el-table-column label="Localisation" width="450">
           <template slot-scope="scope">
             <span>
-              {{ scope.row.adress }}, {{ scope.row.zipcode }},
+              {{ scope.row.address }}, {{ scope.row.zipcode }}
               {{ scope.row.city }}
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="Prix">
+        <el-table-column label="Prix" width="150">
           <template slot-scope="scope">
             <i
               class="el-icon-coin"
               v-for="(_, index) in 3"
               :key="index"
-              :class="index < scope.row.price ? 'activePrice' : 'inactivePrice'"
+              :class="
+                index < scope.row.range_price ? 'activePrice' : 'inactivePrice'
+              "
               style="font-size: 1.5rem"
             ></i>
           </template>
         </el-table-column>
-        <el-table-column label="Accessibilité">
+        <el-table-column label="Accessibilité" width="180">
           <template slot-scope="scope">
             <span>{{ scope.row.accessibility ? "Oui" : "Non" }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="Opérations" width="300">
+        <el-table-column fixed="right" label="Opérations" width="400">
           <template slot-scope="scope">
             <el-button
               size="mini"
               type="success"
               @click="handleGreenscore(scope.row)"
-              v-if="!scope.row.greenscore"
-              >Ajouter un Greenscore</el-button
+              v-if="!scope.row.greenscore.length"
             >
+              {{ scope.row.greenscore.length ? "Editer" : "Ajouter" }} un
+              Greenscore
+            </el-button>
             <el-button
               size="mini"
               type="primary"
@@ -85,16 +93,14 @@
           </template>
         </el-table-column>
       </el-table>
-      <poi-modal
-        ref="editPoiModal"
-        :shop="selectedShop"
-        isEdit
-        v-if="selectedShop !== null"
-        :visible="showEditModal"
+      <poi-modal ref="poiModal" :isEdit="isEdit" />
+      <poi-greenscore-modal
+        ref="addGreenscoreModal"
+        :key="greenscoreShop.uid"
+        :shop="greenscoreShop"
       />
-      <poi-modal ref="addPoiModal" :visible="showAddModal" />
-      <poi-greenscore-modal ref="addGreenscoreModal" :shop="greenscoreShop" />
-      <poi-delete-modal :shop="selectedShop" ref="deletePoiModal" />
+
+      <poi-delete-modal ref="deletePoiModal" />
     </template>
   </div>
 </template>
@@ -123,7 +129,7 @@ import poiGreenscoreModal from "../poi/poiGreenscoreModal";
 import poiModal from "../poi/poiModal";
 import poiDeleteModal from "../poi/poiDeleteModal";
 import greenscoreValue from "../atoms/greenscoreValue";
-import axios from "axios";
+import { mapGetters } from "vuex";
 export default {
   components: {
     poiModal,
@@ -135,48 +141,35 @@ export default {
     return {
       dataTable: null,
       selectedShop: null,
-      showAddModal: false,
-      showEditModal: false,
-      showGreenscoreModal: false,
-      greenscoreShop: null,
-      test: ""
+      showPOIModal: false,
+      greenscoreShop: {},
+      test: "",
+      isEdit: false
     };
   },
 
-  mounted() {
-    axios
-      .get(`${window.config.api_root_url}shops`)
-      .then(response => (this.dataTable = response.data));
+  computed: {
+    ...mapGetters(["shops", "typesOfShopsByUid", "tagsByUid"])
   },
 
   // METHODS
 
   methods: {
     handleEdit(index, shop) {
-      this.selectedShop = shop;
-      this.showEditModal = true;
-
-      this.$refs.editPoiModal.open();
+      this.showPOIModal = true;
+      this.isEdit = true;
+      this.$refs.poiModal.open(shop);
     },
     handleDelete(shop) {
-      this.selectedShop = shop;
-      this.$refs.deletePoiModal.open();
+      this.$refs.deletePoiModal.open(shop);
     },
     addShop() {
-      this.showAddModal = true;
-      this.$refs.addPoiModal.open();
+      this.showPOIModal = true;
+      this.isEdit = false;
+      this.$refs.poiModal.open({});
     },
     handleGreenscore(shop) {
-      this.greenscoreShop = shop;
-      this.showGreenscoreModal = true;
-      this.$refs.addGreenscoreModal.open();
-    },
-    getGreenscore(greenscoreId) {
-      axios
-        .get(`${window.config.api_root_url}greenscore/${greenscoreId}`)
-        .then(resp => {
-          resp.data[0].score.greenscore;
-        });
+      this.$refs.addGreenscoreModal.open(shop);
     }
   }
 };

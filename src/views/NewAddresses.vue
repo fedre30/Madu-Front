@@ -1,37 +1,27 @@
 <template>
-  <div class="companies">
+  <div class="new-addresses">
     <div class="view-header">
-      <h1 class="title">Gestion des récompenses</h1>
-      <div style="margin-top: 15px;">
-        <el-button type="primary" @click="addReward()"
-          >Ajouter une récompense</el-button
-        >
-      </div>
+      <h1 class="title">Gestion des nouvelles adresses</h1>
     </div>
     <template>
       <el-table
         header-cell-class-name="header-cell"
         class="el-table"
-        :data="rewards"
+        :data="newAddresses"
         style="width: 100%"
       >
-        <el-table-column label="Titre" prop="name"></el-table-column>
-        <el-table-column label="Sous titre" prop="subtitle"></el-table-column>
-        <el-table-column label="Points">
-          <template slot-scope="scope">
-            <span style="margin-right: 10px">
-              {{ scope.row.leaves_amount }}
-            </span>
-          </template>
-        </el-table-column>
+        <el-table-column label="Nom du commerce" prop="name"></el-table-column>
+        <el-table-column label="Adresse" prop="address"></el-table-column>
+        <el-table-column label="Code postal" prop="zipcode"></el-table-column>
+        <el-table-column label="Ville" prop="city"></el-table-column>
         <el-table-column label="Opérations">
           <template slot-scope="scope" size="mini">
             <el-button
               class="btn"
               size="mini"
               type="default"
-              @click="handleEdit(scope.row)"
-              >Éditer</el-button
+              @click="handleValidate(scope.row)"
+              >Valider</el-button
             >
             <el-button
               size="mini"
@@ -44,42 +34,36 @@
         </el-table-column>
       </el-table>
     </template>
-    <tips-modal ref="editTipsModal" isEdit />
-    <tips-modal ref="addTipsModal" />
-    <delete-tips-modal ref="deleteTipModal" />
+    <new-address-modal ref="validateModal" isValidation />
+    <new-address-modal ref="deleteModal" />
   </div>
 </template>
 
 <script>
-import TipsModal from "../components/molecules/TipsModal";
-import DeleteTipsModal from "../components/molecules/deleteTipsModal";
+import NewAddressModal from "../components/molecules/NewAddressModal";
 import { mapGetters } from "vuex";
 export default {
   components: {
-    TipsModal,
-    DeleteTipsModal
+    NewAddressModal
   },
 
   computed: {
-    ...mapGetters(["rewards"])
+    ...mapGetters(["newAddresses"])
   },
 
   methods: {
-    handleEdit(reward) {
-      this.$refs.editTipsModal.open(reward);
+    handleValidate(address) {
+      this.$refs.validateModal.open(address);
     },
-    handleDelete(reward) {
-      this.$refs.deleteTipModal.open(reward);
-    },
-    addReward() {
-      this.$refs.addTipsModal.open({});
+    handleDelete(address) {
+      this.$refs.deleteModal.open(address);
     }
   }
 };
 </script>
 
 <style lang="scss">
-.companies {
+.new-addresses {
   padding: 0 2rem 2rem;
   .view-header {
     display: flex;

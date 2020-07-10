@@ -46,7 +46,6 @@
 </template>
 
 <script>
-import axios from "axios";
 export default {
   data: function() {
     return {
@@ -56,11 +55,6 @@ export default {
   },
 
   mounted: function() {
-    axios
-      .get(`${window.config.api_root_url}greenscore/shops/restaurant`)
-      .then(response => {
-        this.resturantData = response.data;
-      });
   }
 };
 </script>

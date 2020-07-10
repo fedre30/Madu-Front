@@ -1,28 +1,22 @@
 <template>
-  <span v-if="value">{{ value }}%</span>
+  <span>
+    {{ greenscoreValue !== null ? `${greenscoreValue}%` : `Non calculé` }}
+  </span>
 </template>
 
 <script>
-import axios from "axios";
 export default {
-  data() {
-    return {
-      value: ""
-    };
-  },
-
   props: {
-    greenscoreId: {
-      type: String
+    relatedShop: {
+      type: Object,
+      required: true
     }
   },
 
-  mounted() {
-    axios
-      .get(`${window.config.api_root_url}greenscore/${this.greenscoreId}`)
-      .then(resp => {
-        this.value = resp.data[0].score.greenscore;
-      });
+  computed: {
+    greenscoreValue() {
+      return this.relatedShop.greenscore.value;
+    }
   }
 };
 </script>

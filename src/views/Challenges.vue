@@ -1,37 +1,53 @@
 <template>
-  <div class="companies">
+  <div class="challenges">
     <div class="view-header">
-      <h1 class="title">Gestion des récompenses</h1>
+      <h1 class="title">Gestion des défis</h1>
       <div style="margin-top: 15px;">
-        <el-button type="primary" @click="addReward()"
-          >Ajouter une récompense</el-button
-        >
+        <el-button type="primary" @click="handleCreate()">
+          Ajouter un nouveau défi
+        </el-button>
       </div>
     </div>
     <template>
       <el-table
         header-cell-class-name="header-cell"
         class="el-table"
-        :data="rewards"
+        :data="challenges"
         style="width: 100%"
       >
-        <el-table-column label="Titre" prop="name"></el-table-column>
-        <el-table-column label="Sous titre" prop="subtitle"></el-table-column>
-        <el-table-column label="Points">
-          <template slot-scope="scope">
-            <span style="margin-right: 10px">
-              {{ scope.row.leaves_amount }}
-            </span>
-          </template>
-        </el-table-column>
-        <el-table-column label="Opérations">
+        <el-table-column
+          label="titre"
+          prop="title"
+          width="250"
+        ></el-table-column>
+        <el-table-column
+          label="Sous titre"
+          prop="subtitle"
+          width="250"
+        ></el-table-column>
+        <el-table-column
+          label="Description courte"
+          prop="small_description"
+          width="350"
+        ></el-table-column>
+        <el-table-column
+          label="Points"
+          prop="leaves_amount"
+          width="100"
+        ></el-table-column>
+        <el-table-column
+          label="Délai (jours)"
+          prop="day_duration"
+          width="100"
+        ></el-table-column>
+        <el-table-column label="Opérations" fixed="right" width="150">
           <template slot-scope="scope" size="mini">
             <el-button
               class="btn"
               size="mini"
               type="default"
               @click="handleEdit(scope.row)"
-              >Éditer</el-button
+              >Editer</el-button
             >
             <el-button
               size="mini"
@@ -44,42 +60,42 @@
         </el-table-column>
       </el-table>
     </template>
-    <tips-modal ref="editTipsModal" isEdit />
-    <tips-modal ref="addTipsModal" />
-    <delete-tips-modal ref="deleteTipModal" />
+    <challenge-modal ref="editModal" isEdit />
+    <challenge-modal ref="createModal" />
+    <delete-challenge-modal ref="deleteModal" />
   </div>
 </template>
 
 <script>
-import TipsModal from "../components/molecules/TipsModal";
-import DeleteTipsModal from "../components/molecules/deleteTipsModal";
+import ChallengeModal from "../components/molecules/ChallengeModal";
+import DeleteChallengeModal from "../components/molecules/deleteChallengeModal";
 import { mapGetters } from "vuex";
 export default {
   components: {
-    TipsModal,
-    DeleteTipsModal
+    ChallengeModal,
+    DeleteChallengeModal
   },
 
   computed: {
-    ...mapGetters(["rewards"])
+    ...mapGetters(["challenges"])
   },
 
   methods: {
-    handleEdit(reward) {
-      this.$refs.editTipsModal.open(reward);
+    handleEdit(address) {
+      this.$refs.editModal.open(address);
     },
-    handleDelete(reward) {
-      this.$refs.deleteTipModal.open(reward);
+    handleCreate(address) {
+      this.$refs.createModal.open(address);
     },
-    addReward() {
-      this.$refs.addTipsModal.open({});
+    handleDelete(address) {
+      this.$refs.deleteModal.open(address);
     }
   }
 };
 </script>
 
 <style lang="scss">
-.companies {
+.challenges {
   padding: 0 2rem 2rem;
   .view-header {
     display: flex;
@@ -105,7 +121,7 @@ export default {
   .el-table {
     font-size: 14px;
     color: #77848f;
-    background-color: transparent;
+    background-color: #fafbfc;
     margin-top: 20px;
     &::before,
     .el-table__fixed-right::before,
@@ -114,7 +130,7 @@ export default {
     }
     th,
     tr {
-      background-color: transparent;
+      background-color: #fafbfc;
       border: none !important;
     }
     td {

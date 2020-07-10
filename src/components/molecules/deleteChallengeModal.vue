@@ -6,10 +6,10 @@
     append-to-body
     @close="showModal = false"
   >
-    Êtes-vous sûr(e) de vouloir supprimer {{ reward.name }} ?
+    Êtes-vous sûr(e) de vouloir supprimer ce défi ?
     <span slot="footer">
       <el-button @click="showModal = false">Annuler</el-button>
-      <el-button type="primary" @click="deletetip()">Supprimer</el-button>
+      <el-button type="primary" @click="deleteChallenge()">Supprimer</el-button>
     </span>
   </el-dialog>
 </template>
@@ -19,19 +19,19 @@ export default {
   data: function() {
     return {
       showModal: false,
-      reward: {}
+      challenge: {}
     };
   },
 
   methods: {
-    open(reward) {
-      this.reward = reward;
+    open(challenge) {
+      this.challenge = challenge;
       this.showModal = true;
     },
-    deletetip() {
+    deleteChallenge() {
       this.$store.dispatch("deleteItem", {
-        item: this.reward,
-        model: "rewards"
+        item: this.challenge,
+        model: "challenges"
       });
       this.showModal = false;
     }

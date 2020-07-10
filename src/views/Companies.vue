@@ -2,51 +2,56 @@
   <div class="companies">
     <div class="view-header">
       <h1 class="title">Gestion des entreprises</h1>
-      <el-button type="primary" @click="openCreationModal"
-        >Ajouter une entreprise</el-button
+      <div class="actions">
+        <el-button type="primary" @click="toggleFilters">Filtres</el-button>
+        <el-button type="primary" @click="openCreationModal"
+          >Ajouter une entreprise</el-button
+        >
+      </div>
+    </div>
+    <div>
+      <div v-if="companies.length === 0" class="no-results">
+        Aucune entreprise n'existe, veuillez en créer une
+      </div>
+      <el-table
+        v-else
+        v-loading="loading"
+        :data="companies"
+        header-cell-class-name="header-cell"
       >
+        <el-table-column prop="name" label="Nom">
+          <template slot-scope="scope">
+            <div class="company-name">{{ scope.row.name }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="type" label="Type"></el-table-column>
+        <el-table-column prop="size" label="Taille"></el-table-column>
+        <el-table-column
+          prop="total_user"
+          label="Nombre d'utilisateurs"
+        ></el-table-column>
+        <el-table-column prop="address" label="localisation"></el-table-column>
+        <el-table-column label="Opérations" fixed="right" width="150">
+          <template slot-scope="scope">
+            <div class="buttons">
+              <el-button
+                class="edit-button"
+                type="primary"
+                size="mini"
+                @click="editClient(scope.row)"
+                >Éditer</el-button
+              >
+              <el-button
+                icon="el-icon-delete"
+                size="mini"
+                type="danger"
+                @click="openArchiveModal(scope.row)"
+              ></el-button>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
-    <div v-if="clients.length === 0" class="no-results">
-      Aucune entreprise n'existe, veuillez en créer une
-    </div>
-    <el-table
-      v-else
-      v-loading="loading"
-      :data="clients"
-      header-cell-class-name="header-cell"
-    >
-      <el-table-column prop="name" label="Nom">
-        <template slot-scope="scope">
-          <div class="company-name">{{ scope.row.name }}</div>
-        </template>
-      </el-table-column>
-      <el-table-column prop="type" label="Type"></el-table-column>
-      <el-table-column prop="size" label="Taille"></el-table-column>
-      <el-table-column
-        prop="accounts"
-        label="Nombre d'inscrits"
-      ></el-table-column>
-      <el-table-column prop="address" label="Adresse"></el-table-column>
-      <el-table-column label="Opération" fixed="right" width="250">
-        <template slot-scope="scope">
-          <div class="buttons">
-            <el-button
-              class="edit-button"
-              type="primary"
-              size="mini"
-              @click="editClient(scope.row)"
-              >Voir la fiche</el-button
-            >
-            <el-button
-              icon="el-icon-delete"
-              size="mini"
-              type="danger"
-              @click="openArchiveModal(scope.row)"
-            ></el-button>
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
     <archive-modal
       ref="archiveModal"
       modelName="client"
@@ -57,11 +62,10 @@
 </template>
 
 <script>
-import axios from "axios";
 import ArchiveModal from "../components/organisms/archiveModal.vue";
 import ClientModal from "../components/organisms/editClientModal.vue";
 import openGeocoder from "node-open-geocoder";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 // search
 export default {
@@ -90,31 +94,15 @@ export default {
   },
 
   computed: {
+    ...mapGetters(["companies"]),
     keygen() {
       return this.selectedClient.name;
     }
   },
-
-  mounted: function() {
-    this.retrieveData();
-  },
-
   methods: {
-    ...mapActions(["fetchData", "postData", "createData"]),
-    retrieveData() {
-      this.loading = true;
-      this.fetchData({
-        modelName: "structures"
-      })
-        .then(resp => {
-          this.clients = resp.data;
-        })
-        .catch(err => {
-          console.error(err); //eslint-disable-line
-        })
-        .finally(() => {
-          this.loading = false;
-        });
+    ...mapActions(["deleteItem"]),
+    toggleFilters() {
+      console.debug("toggleFilter"); //eslint-disable-line
     },
     editClient(client) {
       this.selectedClient = client;
@@ -139,9 +127,10 @@ export default {
       this.$refs.archiveModal.open();
     },
     archiveClient() {
-      axios.delete(
-        `${window.config.api_root_url}structures/delete/${this.selectedClient._id}`
-      );
+      this.deleteItem({
+        item: this.selectedClient,
+        model: "companies"
+      });
       this.showModal = false;
     },
     openCreationModal() {
