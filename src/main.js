@@ -17,7 +17,8 @@ Vue.use(ElementUI, {
 });
 // TODO insérer l'adresse de l'api ici
 window.config = {
-  api_root_url: "https://2677f78a33eb488385dd84dc43c4b836.instances.fr1.caas.microservices.rest/api/v1.1/"
+  api_root_url:
+    "https://2677f78a33eb488385dd84dc43c4b836.instances.fr1.caas.microservices.rest/api/v1.1/"
 };
 Vue.config.productionTip = false;
 
