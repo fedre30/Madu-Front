@@ -3,8 +3,7 @@
     <div class="view-header">
       <h1 class="title">Gestion des entreprises</h1>
       <div class="actions">
-        <el-button type="primary" @click="toggleFilters">Filtres</el-button>
-        <el-button type="primary" @click="openCreationModal"
+        <el-button type="primary" class="create-button" @click="openCreationModal"
           >Ajouter une entreprise</el-button
         >
       </div>
@@ -26,10 +25,11 @@
         </el-table-column>
         <el-table-column prop="type" label="Type"></el-table-column>
         <el-table-column prop="size" label="Taille"></el-table-column>
-        <el-table-column
-          prop="total_user"
-          label="Nombre d'utilisateurs"
-        ></el-table-column>
+        <el-table-column prop="total_user" label="Nombre d'utilisateurs">
+          <template slot-scope="scope">
+            {{ printAndSetUserAmount(scope.row) }}
+          </template>
+        </el-table-column>
         <el-table-column prop="address" label="localisation"></el-table-column>
         <el-table-column label="Opérations" fixed="right" width="150">
           <template slot-scope="scope">
@@ -43,6 +43,7 @@
               >
               <el-button
                 icon="el-icon-delete"
+                class="delete-button"
                 size="mini"
                 type="danger"
                 @click="openArchiveModal(scope.row)"
@@ -94,16 +95,13 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["companies"]),
+    ...mapGetters(["companies", "users"]),
     keygen() {
       return this.selectedClient.name;
     }
   },
   methods: {
-    ...mapActions(["deleteItem"]),
-    toggleFilters() {
-      console.debug("toggleFilter"); //eslint-disable-line
-    },
+    ...mapActions(["deleteItem", "patchItem"]),
     editClient(client) {
       this.selectedClient = client;
       this.$refs.clientModal.open();
@@ -136,6 +134,21 @@ export default {
     openCreationModal() {
       this.selectedClient = {};
       this.$refs.clientModal.open();
+    },
+    printAndSetUserAmount(company) {
+      let userAmount = this.users.filter(user => {
+        return user.company_uid === company.uid;
+      }).length;
+      if (company.url && company.total_user !== userAmount) {
+        this.patchItem({
+          item: {
+            url: company.url,
+            total_user: userAmount
+          },
+          model: "companies"
+        });
+      }
+      return userAmount;
     }
   }
 };
@@ -143,14 +156,21 @@ export default {
 
 <style lang="scss">
 .companies {
-  padding: 0 2rem 2rem;
+  margin: 50px 70px;
   .view-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .title {
-      font-size: 21px;
-      font-family: "Lato Bold";
+    margin-bottom: 30px;
+    .create-button {
+      background-color: #364ec1;
+      color: #fafbfc;
+      border-color: #364ec1;
+      &:hover {
+        background-color: #364ec1;
+        color: #fafbfc;
+        border-color: #364ec1;
+      }
     }
   }
   .no-results {
@@ -180,17 +200,25 @@ export default {
     }
     .company-name {
       font-family: "Lato Bold";
+      color: #364ce1;
     }
-    .map-button,
     .delete-button {
-      border-color: #c0c5d2;
-      color: #c0c5d2;
+      border-color: #ff6a62;
+      color: #ff6a62;
       background-color: #fafbfc;
+      &:hover {
+        background-color: #ff6a62;
+        color: #fafbfc;
+      }
     }
     .edit-button {
       background-color: #fafbfc;
-      color: #0077ff;
-      border-color: #0077ff;
+      color: #364ec1;
+      border-color: #364ec1;
+      &:hover {
+        background-color: #364ec1;
+        color: #fafbfc;
+      }
     }
   }
 }

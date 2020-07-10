@@ -64,7 +64,7 @@ export default {
         .dispatch("login", { email: this.email, password: this.password })
         .then(() => this.$router.push({ name: "home" }))
         .catch(err => {
-          console.log(err) // eslint-disable-line
+          console.errorlog(err) // eslint-disable-line
           this.error = true;
         });
     }
@@ -112,7 +112,7 @@ export default {
           text-transform: uppercase;
           font-size: 14.45px;
           line-height: 17px;
-          letter-spacing: 1.50px;
+          letter-spacing: 1.5px;
           color: #364ec1;
         }
       }
@@ -125,7 +125,7 @@ export default {
         font-size: 13px;
         line-height: 16px;
         color: #ff6a62;
-        letter-spacing: 0.10px;
+        letter-spacing: 0.1px;
       }
       input {
         background: transparent;

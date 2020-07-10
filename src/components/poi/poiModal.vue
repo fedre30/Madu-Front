@@ -1,9 +1,11 @@
 <template>
   <el-dialog
+    :title="`${isEdit ? 'Modifier' : 'Ajouter'} un commerçant`"
     :visible.sync="showModal"
     append-to-body
     width="70%"
     @close="closeModal"
+    class="shop-dialog"
   >
     <el-dialog
       title="Liste des tags"
@@ -11,7 +13,7 @@
       width="70%"
       append-to-body
     >
-      <el-row :gutter="0">
+      <el-row :gutter="0" style="margin-bottom: 20px;">
         <el-col :span="8">
           <div>Nom</div>
         </el-col>
@@ -23,11 +25,13 @@
         </el-col>
       </el-row>
       <tag v-for="tag in tags" :key="tag.uid" :tag="tag"></tag>
+      <el-button class="create-button" @click="createTag">
+        Ajouter un tag
+      </el-button>
       <span slot="footer">
         <el-button @click="showTagModal = false">Fermer</el-button>
       </span>
     </el-dialog>
-    <h2>{{ isEdit ? "Modifier" : "Ajouter" }} un commerçant</h2>
     <el-form :model="formData">
       <el-row :gutter="20" style="margin: 1rem 0">
         <el-col :span="24">
@@ -55,10 +59,19 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20" style="margin: 1rem 0">
-        <el-col :span="24">
+      <el-row
+        :gutter="20"
+        style="margin: 1rem 0"
+        class="tag-selector-container"
+      >
+        <el-col :span="20">
           <el-form-item label="TAGS" class="label-style">
-            <el-select v-model="formData.tags_uid" placeholder="tags" multiple>
+            <el-select
+              class="tag-selector"
+              v-model="formData.tags_uid"
+              placeholder="tags"
+              multiple
+            >
               <el-option
                 v-for="item in tags"
                 :key="item.uid"
@@ -67,7 +80,9 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-button type="primary" @click="showTagModal = true">
+        </el-col>
+        <el-col :span="4">
+          <el-button class="tag-list-button" @click="showTagModal = true">
             Voir les tags
           </el-button>
         </el-col>
@@ -90,12 +105,12 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="ACCES AU FAUTEUIL ROULANT" class="label-style">
-            <el-radio v-model="formData.accessibility" label="true" border
-              >Oui</el-radio
-            >
-            <el-radio v-model="formData.accessibility" label="false" border
-              >Non</el-radio
-            >
+            <el-radio v-model="formData.accessibility" :label="true" border>
+              Oui
+            </el-radio>
+            <el-radio v-model="formData.accessibility" :label="false" border>
+              Non
+            </el-radio>
           </el-form-item>
         </el-col>
       </el-row>
@@ -110,7 +125,9 @@
                 style="font-size: 1.5rem"
                 @click="onClickIcon"
                 :class="
-                  index < formData.price ? 'activePrice' : 'inactivePrice'
+                  index < parseInt(formData.range_price)
+                    ? 'activePrice'
+                    : 'inactivePrice'
                 "
               ></i>
             </div>
@@ -119,12 +136,15 @@
       </el-row>
       <el-row :gutter="20" style="margin: 1rem 0">
         <el-col :span="24">
+          <el-form-item label="Site du commercant" class="label-style">
+            <el-input v-model="formData.website"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" style="margin: 1rem 0">
+        <el-col :span="24">
           <el-form-item label="DESCRIPTION" class="label-style">
-            <el-input
-              type="textarea"
-              v-model="formData.description"
-              show-word-limit
-            ></el-input>
+            <el-input type="textarea" v-model="formData.description"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -146,10 +166,12 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-button type="primary" @click="isEdit ? edit() : addShop()"
+        <el-button class="action-button" @click="isEdit ? edit() : addShop()"
           >Enregistrer</el-button
         >
-        <el-button @click="showModal = false">Annuler</el-button>
+        <el-button class="cancel-button" @click="showModal = false">
+          Annuler
+        </el-button>
       </el-row>
     </el-form>
   </el-dialog>
@@ -184,9 +206,10 @@ export default {
         city: "",
         tags_uid: [],
         accessibility: true,
-        price: 1,
+        range_price: 1,
         description: "",
-        greenscore: {}
+        greenscore: {},
+        website: ""
       },
       showGreenscoreEdit: false
     };
@@ -198,6 +221,21 @@ export default {
 
   methods: {
     ...mapActions(["patchItem", "createItem"]),
+    createTag() {
+      this.$prompt("Entrez le nom du nouveau tag", "Nouveau tag", {
+        confirmButtonText: "Créer",
+        cancelButtonText: "Retour"
+      }).then(({ value }) => {
+        this.createItem({
+          item: {
+            is_main_tag: false,
+            name: value
+          },
+          model: "tags",
+          url: this.$store.state.metaDefinition.listModels.tags.url
+        });
+      });
+    },
     handleAvatarChange(file) {
       let self = this;
       let reader = new FileReader();
@@ -212,11 +250,9 @@ export default {
       reader.readAsDataURL(file.raw);
     },
     open(shop) {
-      console.debug(shop); //eslint-disable-line
       this.$set(this, "shop", shop);
       if (shop.uid) {
         this.$set(this, "formData", JSON.parse(JSON.stringify(this.shop)));
-        console.debug(this.shop); //eslint-disable-line
         this.$set(this, "imageUrl", this.shop.image);
       } else {
         this.imageUrl = "";
@@ -228,24 +264,22 @@ export default {
           city: "",
           tags_uid: [],
           accessibility: true,
-          price: 1,
+          range_price: 1,
           description: "",
-          greenscore: {}
+          greenscore: {},
+          website: ""
         };
-        console.debug(this.typesOfShops);//eslint-disable-line
         let typeOfShop = this.typesOfShops.find(
           type => type.name.toLowerCase() === "alimentaire"
         );
         if (typeOfShop) {
           let mainCriterias = typeOfShop.criterias.map(criteriaUid => {
-            console.debug(criteriaUid);//eslint-disable-line
             if (this.$store.state["greenscoreCriterias"]) {
               return this.greenscoreCriteriasByUid(criteriaUid);
             } else {
               return {};
             }
           });
-          console.debug(mainCriterias); //eslint-disable-line
           mainCriterias.forEach(criteria => {
             this.formData.greenscore[criteria.uid] = { value: null };
           });
@@ -329,7 +363,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .label-style {
   font-weight: bold;
   label {
@@ -367,5 +401,56 @@ export default {
 
 .inactivePrice {
   color: rgba(192, 197, 210, 0.3);
+}
+.tag-selector-container {
+  display: flex;
+  align-items: center;
+  .tag-selector {
+    width: 100%;
+  }
+  .tag-list-button {
+    margin-top: 15px;
+    background-color: #364ec1;
+    color: #fafbfc;
+    border-color: #364ec1;
+    &:hover {
+      background-color: #364ec1;
+      color: #fafbfc;
+      border-color: #364ec1;
+    }
+  }
+}
+
+.shop-dialog {
+  .cancel-button {
+    border-color: #364ec1 !important;
+    color: #364ec1 !important;
+    background-color: #fafbfc !important;
+    &:hover {
+      border-color: #364ec1 !important;
+      background-color: #fafbfc !important;
+      color: #364ec1 !important;
+    }
+  }
+  .create-button {
+    border-color: #364ec1 !important;
+    color: #364ec1 !important;
+    background-color: #fafbfc !important;
+    &:hover {
+      border-color: #364ec1 !important;
+      background-color: #364ec1 !important;
+      color: #fafbfc !important;
+    }
+  }
+  .action-button {
+    background-color: #364ec1 !important;
+    color: #fafbfc !important;
+    border-color: #364ec1 !important;
+    &:hover {
+      border-color: #364ec1 !important;
+      background-color: #364ec1 !important;
+      color: #fafbfc !important;
+    }
+  }
 }
 </style>

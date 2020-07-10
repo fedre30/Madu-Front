@@ -131,7 +131,6 @@ export default {
     });
   },
   async initialFetchModels({ getters, dispatch }) {
-    console.debug('fetch'); //eslint-disable-line
     if (getters.userIsAuthenticated) {
       dispatch("fetchCurrentUserPeriodically");
     }
@@ -296,7 +295,6 @@ export default {
   },
   async remoteGet(context, { url, config = {} }) {
     return new Promise(async (resolve, reject) => {
-      console.debug(this); //eslint-disable-line
       this.axios
         .get(url, config)
         .then(data => {
@@ -429,54 +427,5 @@ export default {
   logout({ commit }) {
     localStorage.setItem("token", "");
     commit("LOGOUT");
-  },
-  fetchData(context, payload) {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(
-          `${window.config.api_root_url}${payload.modelName}/`,
-          payload.filters
-        )
-        .then(resp => {
-          console.debug(resp); //eslint-disable-line
-          resolve(resp);
-        })
-        .catch(err => {
-          reject(err);
-        });
-    });
-  },
-  postData(context, payload) {
-    return new Promise((resolve, reject) => {
-      let url = `${window.config.api_root_url}${payload.modelName}/`;
-      if (payload.is_update === true) {
-        url = `${url}update/${payload.objectId}`;
-      } else {
-        url = `${url}add`;
-      }
-      axios
-        .post(url, payload.data)
-        .then(resp => {
-          resolve(resp);
-        })
-        .catch(err => {
-          reject(err);
-        });
-    });
-  },
-  patchData(context, payload) {
-    return new Promise((resolve, reject) => {
-      axios
-        .patch(
-          `${window.config.api_root_url}${payload.modelName}/${payload.objectId}/`,
-          payload.data
-        )
-        .then(resp => {
-          resolve(resp);
-        })
-        .catch(err => {
-          reject(err);
-        });
-    });
   }
 };

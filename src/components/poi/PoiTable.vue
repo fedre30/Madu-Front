@@ -1,16 +1,19 @@
 <template>
   <div class="container">
-    <el-row
-      justify="end"
-      style="display: flex; margin-bottom: 2rem; align-items: center;"
-    >
+    <div class="view-header">
       <h1>Gestion des commerçants</h1>
-      <el-button class="btn" type="primary" @click="addShop()"
-        >Ajouter un commerçant</el-button
-      >
-    </el-row>
+      <div class="actions">
+        <el-button class="create-button" type="primary" @click="addShop()"
+          >Ajouter un commerçant</el-button
+        >
+      </div>
+    </div>
     <template>
-      <el-table :data="shops" style="width: 100%">
+      <el-table
+        :data="shops"
+        style="width:100%"
+        header-cell-class-name="header-cell"
+      >
         <el-table-column label="Nom" prop="name" width="180"></el-table-column>
         <el-table-column label="Type" width="180">
           <template slot-scope="scope">
@@ -65,11 +68,12 @@
             <span>{{ scope.row.accessibility ? "Oui" : "Non" }}</span>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" label="Opérations" width="400">
+        <el-table-column fixed="right" label="Opérations" width="300">
           <template slot-scope="scope">
             <el-button
               size="mini"
               type="success"
+              class="action-button"
               @click="handleGreenscore(scope.row)"
               v-if="!scope.row.greenscore.length"
             >
@@ -79,6 +83,7 @@
             <el-button
               size="mini"
               type="primary"
+              class="action-button"
               @click="handleEdit(scope.$index, scope.row)"
             >
               <i class="el-icon-edit"></i>
@@ -86,6 +91,7 @@
             <el-button
               size="mini"
               type="danger"
+              class="delete-button"
               @click="handleDelete(scope.row)"
             >
               <i class="el-icon-delete"></i>
@@ -107,7 +113,7 @@
 
 <!-- STYLE -->
 
-<style lang="scss" scoped>
+<style lang="scss">
 .button-container {
   display: flex;
   justify-content: flex-end;
@@ -119,6 +125,64 @@
 
 .inactivePrice {
   color: rgba(192, 197, 210, 0.3);
+}
+.container {
+  .view-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    .create-button {
+      background-color: #364ec1;
+      color: #fafbfc;
+      border-color: #364ec1;
+      &:hover {
+        background-color: #364ec1;
+        color: #fafbfc;
+        border-color: #364ec1;
+      }
+    }
+  }
+  .el-table {
+    font-size: 15px;
+    color: #77848f;
+    background-color: #fafbfc;
+    &::before,
+    .el-table__fixed-right::before,
+    .el-table__fixed::before {
+      display: none;
+    }
+    th,
+    tr {
+      background-color: #fafbfc;
+      border: none !important;
+    }
+    td {
+      border: none !important;
+    }
+    .header-cell {
+      text-transform: uppercase;
+      color: #b4bac6;
+    }
+  }
+  .action-button {
+    background-color: #fafbfc;
+    color: #364ec1;
+    border-color: #364ec1;
+    &:hover {
+      background-color: #364ec1;
+      color: #fafbfc;
+    }
+  }
+  .delete-button {
+    border-color: #ff6a62;
+    color: #ff6a62;
+    background-color: #fafbfc;
+    &:hover {
+      background-color: #ff6a62;
+      color: #fafbfc;
+    }
+  }
 }
 </style>
 

@@ -53,6 +53,21 @@ body {
 }
 #app {
   min-height: 100vh;
+  color: #364ec1;
+}
+textarea {
+  font-family: "Lato Regular";
+}
+h1 {
+  margin: 0;
+  font-size: 48px;
+}
+.el-dialog__title {
+  font-family: "Lato Bold";
+  display: block;
+  margin: 20px !important;
+  color: #364ec1 !important;
+  font-size: 30px !important;
 }
 
 #nav {
@@ -66,6 +81,14 @@ body {
       color: #42b983;
     }
   }
+}
+
+.el-form-item__label {
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #364ce1 !important;
+  width: 100%;
+  text-align: left !important;
 }
 
 .main {

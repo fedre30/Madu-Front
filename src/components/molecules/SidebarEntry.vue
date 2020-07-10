@@ -1,5 +1,5 @@
 <template>
-  <div class="entry" :class="{selected: isSelected}" @click="redirect">
+  <div class="entry" :class="{ selected: isSelected }" @click="redirect">
     <el-tooltip
       class="item"
       effect="dark"
@@ -27,20 +27,15 @@ export default {
       default: "Home"
     }
   },
-  data: function() {
-    return {
-    };
-  },
   computed: {
     isSelected() {
-      console.debug(this.$route); //eslint-disable-line
       return this.$route.name === this.linkName;
     },
     imgSrc() {
-      return require(`../../static/img/${this.imageName}_${this.isSelected ? 'white' : 'blue'}.png`);
+      return require(`../../static/img/${this.imageName}_${
+        this.isSelected ? "white" : "blue"
+      }.png`);
     }
-  },
-  mounted() {
   },
   methods: {
     redirect() {
@@ -70,7 +65,7 @@ export default {
   }
   &:hover {
     cursor: pointer;
-    background-color: #5B74ED;
+    background-color: #5b74ed;
   }
 }
 </style>

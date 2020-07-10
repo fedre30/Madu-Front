@@ -1,6 +1,5 @@
 <template>
   <div class="poi">
-    <h2>Gestions de commerces</h2>
     <PoiTable />
   </div>
 </template>
@@ -16,6 +15,6 @@ export default {
 
 <style lang="scss">
 .poi {
-  padding: 2rem;
+  padding: 50px 70px;
 }
 </style>

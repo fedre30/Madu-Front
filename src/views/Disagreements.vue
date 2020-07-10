@@ -53,6 +53,7 @@
             <el-button
               size="mini"
               type="danger"
+              class="delete-button"
               @click="handleDelete(scope.row)"
             >
               <i class="el-icon-delete"></i>
@@ -108,15 +109,12 @@ export default {
 
 <style lang="scss">
 .disagreements {
-  padding: 0 2rem 2rem;
+  padding: 50px 70px;
   .view-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .title {
-      font-size: 21px;
-      font-family: "Lato Bold";
-    }
+    margin-bottom: 30px;
     .searchInput {
       width: 243px;
       margin-right: 36px !important;
@@ -147,6 +145,19 @@ export default {
     }
     td {
       border: none !important;
+    }
+    .delete-button {
+      border-color: #ff6a62;
+      color: #ff6a62;
+      background-color: #fafbfc;
+      &:hover {
+        background-color: #ff6a62;
+        color: #fafbfc;
+      }
+    }
+    .header-cell {
+      text-transform: uppercase;
+      color: #b4bac6;
     }
   }
   .tab_1 {

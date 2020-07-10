@@ -1,9 +1,9 @@
 <template>
-  <div class="companies">
+  <div class="rewards">
     <div class="view-header">
       <h1 class="title">Gestion des récompenses</h1>
-      <div style="margin-top: 15px;">
-        <el-button type="primary" @click="addReward()"
+      <div>
+        <el-button class="create-button" @click="addReward()"
           >Ajouter une récompense</el-button
         >
       </div>
@@ -27,13 +27,14 @@
         <el-table-column label="Opérations">
           <template slot-scope="scope" size="mini">
             <el-button
-              class="btn"
+              class="edit-btn"
               size="mini"
               type="default"
               @click="handleEdit(scope.row)"
               >Éditer</el-button
             >
             <el-button
+              class="delete-btn"
               size="mini"
               type="danger"
               @click="handleDelete(scope.row)"
@@ -79,15 +80,22 @@ export default {
 </script>
 
 <style lang="scss">
-.companies {
-  padding: 0 2rem 2rem;
+.rewards {
+  padding: 50px 70px;
   .view-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .title {
-      font-size: 21px;
-      font-family: "Lato Bold";
+    margin-bottom: 30px;
+    .create-button {
+      background-color: #364ec1;
+      color: #fafbfc;
+      border-color: #364ec1;
+      &:hover {
+        background-color: #364ec1;
+        color: #fafbfc;
+        border-color: #364ec1;
+      }
     }
     .searchInput {
       width: 243px;
@@ -119,6 +127,28 @@ export default {
     }
     td {
       border: none !important;
+    }
+    .header-cell {
+      text-transform: uppercase;
+      color: #b4bac6;
+    }
+    .delete-btn {
+      border-color: #ff6a62;
+      color: #ff6a62;
+      background-color: #fafbfc;
+      &:hover {
+        background-color: #ff6a62;
+        color: #fafbfc;
+      }
+    }
+    .edit-btn {
+      background-color: #fafbfc;
+      color: #364ec1;
+      border-color: #364ec1;
+      &:hover {
+        background-color: #364ec1;
+        color: #fafbfc;
+      }
     }
   }
   .tab_1 {

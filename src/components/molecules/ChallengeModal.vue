@@ -1,11 +1,11 @@
 <template>
   <el-dialog
+    :title="`${isEdit ? 'Modifier' : 'Ajouter'} un défi`"
     :visible.sync="showModal"
     append-to-body
     width="60%"
     @close="showModal = false"
   >
-    <h2 class="title">{{ isEdit ? "Modifier" : "Ajouter" }} un défi</h2>
     <el-form :model="challengeData">
       <el-row :gutter="20">
         <el-col :span="24">

@@ -1,11 +1,11 @@
 <template>
   <el-dialog
     :visible.sync="showModal"
+    :title="`${isEdit ? 'Modifier' : 'Ajouter'} une récompense`"
     append-to-body
     width="60%"
     @close="showModal = false"
   >
-    <h2 class="title">{{ isEdit ? "Modifier" : "Ajouter" }} une récompense</h2>
     <el-form :model="rewardData">
       <el-row :gutter="20">
         <el-col :span="12">

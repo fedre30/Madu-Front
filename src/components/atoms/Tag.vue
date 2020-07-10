@@ -1,10 +1,16 @@
 <template>
-  <el-row :gutter="0">
+  <el-row :gutter="0" class="tag-container">
     <el-col :span="8">
       <div>{{ tag.name }}</div>
     </el-col>
     <el-col :span="6">
-      <el-checkbox :value="tag.is_main_tag" @click="patchTag"></el-checkbox>
+      <el-button
+        class="tag-state-button"
+        :class="{ selected: tag.is_main_tag }"
+        @click="patchTag"
+      >
+        {{ tag.is_main_tag ? "Oui" : "Non" }}
+      </el-button>
     </el-col>
     <el-col :span="6">
       <el-upload
@@ -98,5 +104,35 @@ export default {
 <style lang="scss">
 .tag-image {
   max-height: 35px;
+}
+.tag-container {
+  display: flex;
+  align-items: center;
+  + .tag-container {
+    margin-top: 10px;
+  }
+  .tag-state-button {
+    width: 68px;
+    background-color: #fafbfc;
+    border-color: #364ec1;
+    color: #364ec1;
+    &:hover,
+    &:focus {
+      background-color: #fafbfc;
+      border-color: #364ec1;
+      color: #364ec1;
+    }
+    &.selected {
+      background-color: #364ec1;
+      border-color: #364ec1;
+      color: #fafbfc;
+      &:hover,
+      &:focus {
+        background-color: #364ec1;
+        border-color: #364ec1;
+        color: #fafbfc;
+      }
+    }
+  }
 }
 </style>
